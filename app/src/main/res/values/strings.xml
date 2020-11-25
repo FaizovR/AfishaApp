@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Afisha</string>
+    <string name="error_with_internet_connections">Error with Internet Connections</string>
 </resources>
