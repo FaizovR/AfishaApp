@@ -1,14 +1,14 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_menu.*
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.domain.model.Category
+import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.CategoryAdapter
 import ru.faizovr.afisha.presentation.contract.CategoryContract
 import ru.faizovr.afisha.presentation.presenter.CategoryPresenter
@@ -39,7 +39,11 @@ class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View
     }
 
     override fun showNewFragment(category: Category) {
-        Toast.makeText(context, "Clicked ${category.name}", Toast.LENGTH_SHORT).show()
+        val fragment: Fragment = EventListFragment(category)
+        activity?.let {
+            if (it is MainActivity)
+                it.goToFragment(fragment)
+        }
     }
 
     override fun setCategoryListVisibility(isVisible: Boolean) {
