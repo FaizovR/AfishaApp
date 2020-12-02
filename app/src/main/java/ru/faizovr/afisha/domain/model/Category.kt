@@ -1,6 +1,6 @@
 package ru.faizovr.afisha.domain.model
 
-class Category (
+class Category(
     val id: Long,
     val slug: String,
     val name: String

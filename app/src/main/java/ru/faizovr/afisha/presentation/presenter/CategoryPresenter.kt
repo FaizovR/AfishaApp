@@ -1,5 +1,6 @@
 package ru.faizovr.afisha.presentation.presenter
 
+import android.util.Log
 import ru.faizovr.afisha.data.Repository
 import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
 import ru.faizovr.afisha.domain.model.Category
@@ -19,6 +20,7 @@ class CategoryPresenter(
 
     override fun onCategoryItemClickedForPosition(position: Int) {
         view.showNewFragment(categoryList[position])
+        Log.d("TAG", "onCategoryItemClickedForPosition: category name = ${categoryList[position].name}")
     }
 
     override fun onCategoryDataLoaded(data: List<Category>?) {

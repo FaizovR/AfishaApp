@@ -13,10 +13,21 @@ import ru.faizovr.afisha.data.model.EventListResponse
 interface ApiService {
 
     @GET("event-categories/?lang=ru")
-    fun getListCategories() : Call<List<CategoriesResponse>>
+    fun getListCategories(): Call<List<CategoriesResponse>>
 
-    @GET("events/?")
-    fun getEventList(@Query("category") categoryName: String) : Call<EventListResponse>
+    @GET("events/")
+    fun getEventFirstPage(@Query("category") categoryName: String): Call<EventListResponse>
+
+    @GET("events/")
+    fun getEvents(
+        @Query("fields") fields: String,
+        @Query("categories") categoryName: String,
+        @Query("page_size") pageSize: Int,
+        @Query("page") page: String,
+        @Query("order_by") order: String,
+        @Query("actual_since") actual_since: String,
+        @Query("text_format") text_format: String = "text"
+    ): Call<EventListResponse>
 
     companion object {
         private const val API_VERSION = "v1.4"

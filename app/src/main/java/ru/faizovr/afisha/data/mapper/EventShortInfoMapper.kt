@@ -7,14 +7,18 @@ class EventShortInfoMapper : EntityMapper<EventShortInfoResponse, EventShortInfo
     override fun mapFromEntity(entity: EventShortInfoResponse): EventShortInfo =
         EventShortInfo(
             id = entity.id ?: -1,
-            tittle = entity.tittle ?: "",
-            slug = entity.slug ?: ""
+            title = entity.title ?: "",
+            slug = entity.slug ?: "",
+            description = entity.description ?: "",
+            image = entity.image ?: ""
         )
 
     override fun mapToEntity(domainModel: EventShortInfo): EventShortInfoResponse =
         EventShortInfoResponse(
             id = domainModel.id,
-            tittle = domainModel.tittle,
-            slug = domainModel.slug
+            title = domainModel.title,
+            slug = domainModel.slug,
+            description = domainModel.description,
+            image = domainModel.image
         )
 }

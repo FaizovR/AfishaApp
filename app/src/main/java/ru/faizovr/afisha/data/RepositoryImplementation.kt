@@ -6,10 +6,10 @@ import retrofit2.Response
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
 import ru.faizovr.afisha.data.model.CategoriesResponse
-import ru.faizovr.afisha.data.model.EventListResponse
 import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
-import ru.faizovr.afisha.data.remote.callback.EventListCallback
 import ru.faizovr.afisha.data.remote.service.ApiService
+import ru.faizovr.afisha.domain.model.Category
+import ru.faizovr.afisha.domain.model.EventList
 
 class RepositoryImplementation(private val apiService: ApiService) : Repository {
 
@@ -26,27 +26,33 @@ class RepositoryImplementation(private val apiService: ApiService) : Repository 
                 call: Call<List<CategoriesResponse>>,
                 response: Response<List<CategoriesResponse>>
             ) {
-                callback.onCategoryDataLoaded(response.body()?.map { categoryMapper.mapFromEntity(it) })
+                callback.onCategoryDataLoaded(
+                    response.body()?.map { categoryMapper.mapFromEntity(it) })
             }
         })
     }
 
-    override fun loadEventListFromApi(
-        callback: EventListCallback,
-        categoryName: String
-    ) {
-        apiService.getEventList(categoryName).enqueue(object : Callback<EventListResponse> {
-            override fun onResponse(call: Call<EventListResponse>, response: Response<EventListResponse>) {
-                val entity = response.body()
-                if (entity != null) {
-                    callback.onEventListLoaded(eventListMapper.mapFromEntity(entity))
-                }
-            }
+    override fun getEventList(page: String, category: Category): EventList? {
+        val eventFirstPage = apiService.getEvents(
+            LIST_FIELDS_TO_RETRIEVE,
+            category.slug,
+            PAGE_SIZE,
+            page,
+            ORDER_PUBLICATION_DATE,
+            ACTUAL_SINCE
 
-            override fun onFailure(call: Call<EventListResponse>, t: Throwable) {
-                callback.onError()
-            }
+        )
+        val body = eventFirstPage.execute().body()
+        return if (body != null)
+            eventListMapper.mapFromEntity(body)
+        else
+            null
+    }
 
-        })
+    companion object {
+        private const val LIST_FIELDS_TO_RETRIEVE = "id,dates,title,place,price,description,images"
+        private const val PAGE_SIZE = 20
+        private const val ORDER_PUBLICATION_DATE = "publication_date"
+        private const val ACTUAL_SINCE = "1606901406"
     }
 }

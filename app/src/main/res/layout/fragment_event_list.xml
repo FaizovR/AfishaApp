@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.EventListFragment">
 
-    <TextView
-        android:id="@+id/text_response"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_event_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/event_list_item_view_holder" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_event_list"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/text_view_event_list_failed_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/error_with_internet_connections"
+        android:visibility="gone"
+        tools:layout_marginTop="@dimen/spacing_huge_32"
+        tools:visibility="visible" />
 
 </FrameLayout>
