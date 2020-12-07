@@ -1,25 +1,19 @@
 package ru.faizovr.afisha.presentation.adapter
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
-import ru.faizovr.afisha.R
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
 import ru.faizovr.afisha.domain.model.EventShortInfo
 import ru.faizovr.afisha.presentation.diffutil.EventListDiffUtil
 import ru.faizovr.afisha.presentation.viewholder.EventListItemViewHolder
 
-class EventListAdapter() :
-    PagedListAdapter<EventShortInfo, EventListItemViewHolder>(EventListDiffUtil()) {
+class EventListAdapter :
+    PagingDataAdapter<EventShortInfo, RecyclerView.ViewHolder>(EventListDiffUtil()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventListItemViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.event_list_item_view_holder, parent, false)
-        return EventListItemViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        EventListItemViewHolder.create(parent)
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        getItem(position)?.let { (holder as EventListItemViewHolder).bind(it) }
     }
-
-    override fun onBindViewHolder(holder: EventListItemViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
-    }
-
 }

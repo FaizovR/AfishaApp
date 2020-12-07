@@ -6,6 +6,7 @@ import retrofit2.Response
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
 import ru.faizovr.afisha.data.model.CategoriesResponse
+import ru.faizovr.afisha.data.model.EventListResponse
 import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
 import ru.faizovr.afisha.data.remote.service.ApiService
 import ru.faizovr.afisha.domain.model.Category
@@ -24,7 +25,7 @@ class RepositoryImplementation(private val apiService: ApiService) : Repository 
 
             override fun onResponse(
                 call: Call<List<CategoriesResponse>>,
-                response: Response<List<CategoriesResponse>>
+                response: Response<List<CategoriesResponse>>,
             ) {
                 callback.onCategoryDataLoaded(
                     response.body()?.map { categoryMapper.mapFromEntity(it) })
@@ -32,8 +33,9 @@ class RepositoryImplementation(private val apiService: ApiService) : Repository 
         })
     }
 
-    override fun getEventList(page: String, category: Category): EventList? {
-        val eventFirstPage = apiService.getEvents(
+
+    override suspend fun getEventList(page: String, category: Category): EventList? {
+        val eventPage = apiService.getEvents(
             LIST_FIELDS_TO_RETRIEVE,
             category.slug,
             PAGE_SIZE,
@@ -42,11 +44,12 @@ class RepositoryImplementation(private val apiService: ApiService) : Repository 
             ACTUAL_SINCE
 
         )
-        val body = eventFirstPage.execute().body()
-        return if (body != null)
+        val body: EventListResponse? = eventPage.body()
+        return if (body != null) {
             eventListMapper.mapFromEntity(body)
-        else
+        } else {
             null
+        }
     }
 
     companion object {

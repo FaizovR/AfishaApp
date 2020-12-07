@@ -15,7 +15,7 @@ import ru.faizovr.afisha.presentation.presenter.CategoryPresenter
 
 class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View {
 
-    private var categoryPresenter : CategoryContract.Presenter? = null
+    private var categoryPresenter: CategoryContract.Presenter? = null
 
     private val onMenuClicked: (position: Int) -> Unit = { position: Int ->
         categoryPresenter?.onCategoryItemClickedForPosition(position)
@@ -23,13 +23,14 @@ class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setupPresenter()
         setupView()
     }
 
     private fun setupView() {
         recycler_view_category.adapter = CategoryAdapter(onMenuClicked)
+        button_menu_retry.setOnClickListener { categoryPresenter?.onRetryClicked() }
     }
 
     private fun setupPresenter() {
@@ -44,6 +45,10 @@ class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View
             if (it is MainActivity)
                 it.goToFragment(fragment)
         }
+    }
+
+    override fun setRetryButtonVisibility(isVisible: Boolean) {
+        button_menu_retry.isVisible = isVisible
     }
 
     override fun setCategoryListVisibility(isVisible: Boolean) {

@@ -29,7 +29,19 @@
         android:layout_gravity="center"
         android:text="@string/error_with_internet_connections"
         android:visibility="gone"
+        android:layout_marginBottom="@dimen/spacing_normal_16"
         tools:layout_marginTop="@dimen/spacing_huge_32"
         tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/button_menu_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_huge_32"
+        android:text="@string/action_retry"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
 
 </FrameLayout>

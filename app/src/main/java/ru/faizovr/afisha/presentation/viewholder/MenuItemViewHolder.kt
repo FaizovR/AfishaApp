@@ -9,7 +9,7 @@ class MenuItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(message: String, onMenuClicked: (position: Int) -> Unit) {
         itemView.text_menu_item_title.text = message
         itemView.setOnClickListener {
-            onMenuClicked(adapterPosition)
+            onMenuClicked(bindingAdapterPosition)
         }
     }
 }

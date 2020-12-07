@@ -1,35 +1,60 @@
 package ru.faizovr.afisha.presentation.presenter
 
-import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
-import ru.faizovr.afisha.data.EventListDataSourceFactory
+import androidx.paging.*
+import kotlinx.coroutines.flow.Flow
+import ru.faizovr.afisha.data.EventListDataSource
 import ru.faizovr.afisha.data.Repository
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventShortInfo
+import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.contract.EventListContract
 
 class EventListPresenter(
     private val view: EventListContract.View,
     private val repository: Repository,
-    private val category: Category
+    private val category: Category,
 ) : EventListContract.Presenter {
 
-    private lateinit var eventListDataSource: EventListDataSourceFactory
-    private lateinit var events: LiveData<PagedList<EventShortInfo>>
+    private var eventListAdapter: EventListAdapter? = null
+    private lateinit var listData: Flow<PagingData<EventShortInfo>>
 
     override fun init() {
-
-        eventListDataSource = EventListDataSourceFactory(repository, category)
-        events = LivePagedListBuilder(eventListDataSource, pagedListConfig()).build()
-        view.setupLiveData(events)
+        this.eventListAdapter = EventListAdapter()
+        listData = Pager(PagingConfig(pageSize = 20)) {
+            EventListDataSource(repository, category)
+        }.flow
+        val eventListAdapter = eventListAdapter
+        if (eventListAdapter != null) {
+            view.setupView()
+            view.setupList(eventListAdapter)
+            view.setupLiveData(listData, eventListAdapter)
+        }
     }
 
-    private fun pagedListConfig() = PagedList.Config.Builder()
-        .setInitialLoadSizeHint(5)
-        .setEnablePlaceholders(true)
-        .setPageSize(20)
-        .build()
+    override fun onRetryButtonClicked() {
+        eventListAdapter?.retry()
+    }
 
-
+    override fun onLoadStateChanged(loadState: CombinedLoadStates) {
+        when (loadState.refresh) {
+            is LoadState.Loading -> {
+                view.setProgressBarVisibility(true)
+                view.setErrorTextVisibility(false)
+                view.setRetryButtonVisibility(false)
+                view.setEventListVisibility(false)
+            }
+            is LoadState.Error -> {
+                view.setProgressBarVisibility(false)
+                view.setErrorTextVisibility(true)
+                view.setRetryButtonVisibility(true)
+                view.setEventListVisibility(false)
+            }
+            else -> {
+                view.setProgressBarVisibility(false)
+                view.setErrorTextVisibility(false)
+                view.setRetryButtonVisibility(false)
+                view.setEventListVisibility(true)
+            }
+        }
+    }
 }

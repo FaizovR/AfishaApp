@@ -3,6 +3,7 @@ package ru.faizovr.afisha.data.remote.service
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -16,10 +17,7 @@ interface ApiService {
     fun getListCategories(): Call<List<CategoriesResponse>>
 
     @GET("events/")
-    fun getEventFirstPage(@Query("category") categoryName: String): Call<EventListResponse>
-
-    @GET("events/")
-    fun getEvents(
+    suspend fun getEvents(
         @Query("fields") fields: String,
         @Query("categories") categoryName: String,
         @Query("page_size") pageSize: Int,
@@ -27,7 +25,7 @@ interface ApiService {
         @Query("order_by") order: String,
         @Query("actual_since") actual_since: String,
         @Query("text_format") text_format: String = "text"
-    ): Call<EventListResponse>
+    ): Response<EventListResponse>
 
     companion object {
         private const val API_VERSION = "v1.4"

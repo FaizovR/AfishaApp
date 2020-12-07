@@ -18,6 +18,11 @@ class CategoryPresenter(
         showProgressBar()
     }
 
+    override fun onRetryClicked() {
+        repository.getCategoryFromApi(this)
+        showProgressBar()
+    }
+
     override fun onCategoryItemClickedForPosition(position: Int) {
         view.showNewFragment(categoryList[position])
         Log.d("TAG", "onCategoryItemClickedForPosition: category name = ${categoryList[position].name}")
@@ -37,18 +42,21 @@ class CategoryPresenter(
 
     private fun showErrorText() {
         view.setErrorTextVisibility(true)
+        view.setRetryButtonVisibility(true)
         view.setCategoryListVisibility(false)
         view.setProgressBarVisibility(false)
     }
 
     private fun showProgressBar() {
         view.setProgressBarVisibility(true)
+        view.setRetryButtonVisibility(false)
         view.setErrorTextVisibility(false)
         view.setCategoryListVisibility(false)
     }
 
     private fun showList(list: List<Category>) {
         view.setCategoryListVisibility(true)
+        view.setRetryButtonVisibility(false)
         view.setErrorTextVisibility(false)
         view.setProgressBarVisibility(false)
         view.showList(list.map { it.name })

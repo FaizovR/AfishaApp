@@ -6,6 +6,7 @@ interface CategoryContract {
 
     interface View {
         fun showNewFragment(category: Category)
+        fun setRetryButtonVisibility(isVisible: Boolean)
         fun setErrorTextVisibility(isVisible: Boolean)
         fun setProgressBarVisibility(isVisible: Boolean)
         fun setCategoryListVisibility(isVisible: Boolean)
@@ -14,6 +15,7 @@ interface CategoryContract {
 
     interface Presenter {
         fun init()
+        fun onRetryClicked()
         fun onCategoryItemClickedForPosition(position: Int)
     }
 }

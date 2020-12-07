@@ -8,5 +8,5 @@ interface Repository {
 
     fun getCategoryFromApi(callback: CategoriesCallback)
 
-    fun getEventList(page: String, category: Category): EventList?
+    suspend fun getEventList(page: String, category: Category): EventList?
 }

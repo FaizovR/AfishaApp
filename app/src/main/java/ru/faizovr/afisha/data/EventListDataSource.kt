@@ -1,37 +1,30 @@
 package ru.faizovr.afisha.data
 
-import androidx.paging.PageKeyedDataSource
+import android.util.Log
+import androidx.paging.PagingSource
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
 import ru.faizovr.afisha.domain.model.EventShortInfo
 
 class EventListDataSource(
     private val repository: Repository,
-    private val category: Category
+    private val category: Category,
 ) :
-    PageKeyedDataSource<String, EventShortInfo>() {
+    PagingSource<String, EventShortInfo>() {
 
-    override fun loadInitial(
-        params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, EventShortInfo>
-    ) {
-        val events: EventList? = repository.getEventList("1", category)
-        val next = events?.nextPage
-        callback.onResult(events?.events!!, null, next)
-    }
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, EventShortInfo> =
+        try {
+            val currentLoadingPageKey = params.key ?: "1"
+            val response: EventList? = repository.getEventList(currentLoadingPageKey, category)
+            val data: List<EventShortInfo> = response?.events ?: emptyList()
 
-    override fun loadBefore(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, EventShortInfo>
-    ) {
-    }
-
-    override fun loadAfter(
-        params: LoadParams<String>,
-        callback: LoadCallback<String, EventShortInfo>
-    ) {
-        val events: EventList? = repository.getEventList(params.key, category)
-        val next = events?.nextPage
-        callback.onResult(events?.events!!, next)
-    }
+            LoadResult.Page(
+                data = data,
+                prevKey = response?.previousPage,
+                nextKey = response?.nextPage
+            )
+        } catch (e: Exception) {
+            Log.d("TAG", "load:  ERROR")
+            LoadResult.Error(e)
+        }
 }
