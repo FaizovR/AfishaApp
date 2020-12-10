@@ -20,32 +20,15 @@ import ru.faizovr.afisha.presentation.adapter.FooterAdapter
 import ru.faizovr.afisha.presentation.contract.EventListContract
 import ru.faizovr.afisha.presentation.presenter.EventListPresenter
 
-class EventListFragment(private var category: Category?) : Fragment(R.layout.fragment_event_list),
+class EventListFragment : Fragment(R.layout.fragment_event_list),
     EventListContract.View {
 
     private var presenter: EventListContract.Presenter? = null
-
-    constructor() : this(null)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            val parcelable = savedInstanceState.getParcelable<Category>(CATEGORY_KEY)
-            if (parcelable != null) {
-                category = parcelable
-            }
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupPresenter()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(CATEGORY_KEY, category)
     }
 
     override fun setupView() {
@@ -66,7 +49,10 @@ class EventListFragment(private var category: Category?) : Fragment(R.layout.fra
 
     private fun setupPresenter() {
         val app: App = activity?.application as App
-        presenter = category?.let { EventListPresenter(this, app.repository, it) }
+        val category = arguments?.getParcelable<Category>(EVENT_LIST_CATEGORY_KEY)
+        if (category != null) {
+            presenter = EventListPresenter(this, app.repository, category)
+        }
         presenter?.init()
     }
 
@@ -96,6 +82,8 @@ class EventListFragment(private var category: Category?) : Fragment(R.layout.fra
     }
 
     companion object {
+        const val FRAGMENT_TAG = "EVENT_LIST_FRAGMENT"
+        const val EVENT_LIST_CATEGORY_KEY = "Event_Category"
         private const val CATEGORY_KEY = "Category"
     }
 }

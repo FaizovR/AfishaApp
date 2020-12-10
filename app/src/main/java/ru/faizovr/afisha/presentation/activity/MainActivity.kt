@@ -19,14 +19,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun goToFragment(fragment: Fragment) {
-        replaceFragment(fragment)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                supportFragmentManager.popBackStack(FRAGMENT_TAG, POP_BACK_STACK_INCLUSIVE)
+                supportFragmentManager.popBackStack(null, POP_BACK_STACK_INCLUSIVE)
                 return true
             }
         }
@@ -38,19 +34,6 @@ class MainActivity : AppCompatActivity() {
             .beginTransaction()
             .add(R.id.main_fragment_container, fragment)
             .commit()
-    }
-
-
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
-            .addToBackStack(FRAGMENT_TAG)
-            .commit()
-    }
-
-    companion object {
-        private const val FRAGMENT_TAG = "TaskListFragment"
     }
 
 }
