@@ -72,7 +72,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         recycler_view_event_list.isVisible = isVisible
     }
 
-    override fun setupLiveData(
+    override fun setupDataToList(
         events: Flow<PagingData<EventShortInfo>>,
         eventListAdapter: EventListAdapter,
     ) {

@@ -15,7 +15,7 @@ interface EventListContract {
         fun setProgressBarVisibility(isVisible: Boolean)
         fun setEventListVisibility(isVisible: Boolean)
         fun setRetryButtonVisibility(isVisible: Boolean)
-        fun setupLiveData(
+        fun setupDataToList(
             events: Flow<PagingData<EventShortInfo>>,
             eventListAdapter: EventListAdapter,
         )

@@ -27,7 +27,7 @@ class EventListPresenter(
         if (eventListAdapter != null) {
             view.setupView()
             view.setupList(eventListAdapter)
-            view.setupLiveData(listData, eventListAdapter)
+            view.setupDataToList(listData, eventListAdapter)
         }
     }
 
