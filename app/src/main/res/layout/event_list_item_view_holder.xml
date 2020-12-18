@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:layout_margin="@dimen/spacing_tiny_4"
-            android:textColor="@color/white"
             android:textSize="@dimen/font_large_24"
             tools:text="Описание заголовка" />
 
