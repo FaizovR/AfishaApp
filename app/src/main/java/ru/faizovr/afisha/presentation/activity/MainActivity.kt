@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.presentation.fragment.CategoryFragment
+import ru.faizovr.afisha.presentation.fragment.EventListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            addFragment(CategoryFragment())
+            addFragment(CategoryFragment.newInstance())
         }
     }
 
@@ -27,6 +28,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.main_fragment_container, fragment)
+            .addToBackStack(fragment.tag)
+            .commit()
     }
 
     private fun addFragment(fragment: Fragment) {

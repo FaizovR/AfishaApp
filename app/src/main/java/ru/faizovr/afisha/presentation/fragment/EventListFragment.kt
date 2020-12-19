@@ -82,8 +82,13 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     companion object {
-        const val FRAGMENT_TAG = "EVENT_LIST_FRAGMENT"
-        const val EVENT_LIST_CATEGORY_KEY = "Event_Category"
-        private const val CATEGORY_KEY = "Category"
+        private const val EVENT_LIST_CATEGORY_KEY = "Event_Category"
+        fun newInstance(category: Category): EventListFragment {
+            val args = Bundle()
+            args.putParcelable(EVENT_LIST_CATEGORY_KEY, category)
+            val fragment = EventListFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

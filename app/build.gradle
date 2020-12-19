@@ -6,7 +6,7 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "ru.faizovr.afisha"
@@ -48,8 +48,6 @@ dependencies {
     // optional - Guava ListenableFuture support
     implementation "androidx.paging:paging-guava:$paging_version"
 
-    // Jetpack Compose Integration
-    implementation "androidx.paging:paging-compose:1.0.0-alpha03"
     // Internet
     def okHttp_version = "4.8.0"
     def retrofit_version = "2.9.0"

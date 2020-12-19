@@ -40,15 +40,8 @@ class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View
     }
 
     override fun showNewFragment(category: Category) {
-        val bundle = Bundle()
-        bundle.putParcelable(EventListFragment.EVENT_LIST_CATEGORY_KEY, category)
-        val fragment: Fragment = EventListFragment()
-        fragment.arguments = bundle
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
-            .addToBackStack(EventListFragment.FRAGMENT_TAG)
-            .commit()
+        val fragment: Fragment = EventListFragment.newInstance(category)
+        (requireActivity() as MainActivity).replaceFragment(fragment)
     }
 
     override fun setRetryButtonVisibility(isVisible: Boolean) {
@@ -70,5 +63,15 @@ class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View
     override fun showList(list: List<String>) {
         val adapter = recycler_view_category.adapter as CategoryAdapter
         adapter.updateList(list)
+    }
+
+    companion object {
+        fun newInstance(): CategoryFragment {
+            val args = Bundle()
+
+            val fragment = CategoryFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }
