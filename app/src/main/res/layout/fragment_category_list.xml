@@ -10,9 +10,10 @@
         android:id="@+id/recycler_view_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
-        tools:listitem="@layout/menu_list_item_view_holder" />
+        tools:listitem="@layout/category_list_item_view_holder" />
 
     <ProgressBar
         android:id="@+id/progress_bar_category"
@@ -27,9 +28,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/spacing_normal_16"
         android:text="@string/error_with_internet_connections"
         android:visibility="gone"
-        android:layout_marginBottom="@dimen/spacing_normal_16"
         tools:layout_marginTop="@dimen/spacing_huge_32"
         tools:visibility="visible" />
 
@@ -41,7 +42,7 @@
         android:layout_marginTop="@dimen/spacing_huge_32"
         android:text="@string/action_retry"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 
 </FrameLayout>

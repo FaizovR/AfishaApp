@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.presentation.fragment.CategoryFragment
-import ru.faizovr.afisha.presentation.fragment.EventListFragment
 
 class MainActivity : AppCompatActivity() {
 

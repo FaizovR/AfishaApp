@@ -27,7 +27,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupPresenter()
     }
 
@@ -48,7 +48,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     private fun setupPresenter() {
-        val app: App = activity?.application as App
+        val app: App = requireActivity().   application as App
         val category = arguments?.getParcelable<Category>(EVENT_LIST_CATEGORY_KEY)
         if (category != null) {
             presenter = EventListPresenter(this, app.repository, category)

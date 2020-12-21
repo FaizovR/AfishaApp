@@ -36,7 +36,6 @@ interface ApiService {
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             val httpClient: OkHttpClient.Builder = OkHttpClient.Builder()
             httpClient.addInterceptor(loggingInterceptor)
-
             val retrofit = Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

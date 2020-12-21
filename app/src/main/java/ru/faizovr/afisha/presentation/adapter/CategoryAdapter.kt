@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.faizovr.afisha.R
-import ru.faizovr.afisha.presentation.viewholder.MenuItemViewHolder
+import ru.faizovr.afisha.presentation.viewholder.CategoryItemViewHolder
 
 class CategoryAdapter(private val onMenuClicked: (position: Int) -> Unit) :
-    RecyclerView.Adapter<MenuItemViewHolder>() {
+    RecyclerView.Adapter<CategoryItemViewHolder>() {
 
     private var menuList: List<String> = listOf()
 
@@ -16,16 +16,16 @@ class CategoryAdapter(private val onMenuClicked: (position: Int) -> Unit) :
         menuList = newList
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryItemViewHolder {
         val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.menu_list_item_view_holder, parent, false)
-        return MenuItemViewHolder(view)
+            .inflate(R.layout.category_list_item_view_holder, parent, false)
+        return CategoryItemViewHolder(view)
     }
 
     override fun getItemCount(): Int =
         menuList.size
 
-    override fun onBindViewHolder(holder: MenuItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryItemViewHolder, position: Int) {
         holder.bind(menuList[position], onMenuClicked)
     }
 }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_menu.*
+import kotlinx.android.synthetic.main.fragment_category_list.*
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.domain.model.Category
@@ -13,7 +13,7 @@ import ru.faizovr.afisha.presentation.adapter.CategoryAdapter
 import ru.faizovr.afisha.presentation.contract.CategoryContract
 import ru.faizovr.afisha.presentation.presenter.CategoryPresenter
 
-class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View {
+class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryContract.View {
 
     private var categoryPresenter: CategoryContract.Presenter? = null
 
@@ -23,7 +23,8 @@ class CategoryFragment : Fragment(R.layout.fragment_menu), CategoryContract.View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        (requireActivity() as MainActivity).supportActionBar?.title = getString(R.string.category_title)
         setupPresenter()
         setupView()
     }

@@ -20,7 +20,6 @@
         android:background="#B3C5CAE9"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/text_view_tittle_event_holder"
             android:layout_width="wrap_content"

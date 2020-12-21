@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Afisha</string>
+    <string name="category_title">Выберите категорию</string>
+    <string name="error_with_internet_connections">Ошибка подкючения</string>
+    <string name="action_retry">Повторить</string>
+</resources>
