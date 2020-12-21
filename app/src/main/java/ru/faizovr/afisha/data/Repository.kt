@@ -6,7 +6,7 @@ import ru.faizovr.afisha.domain.model.EventList
 
 interface Repository {
 
-    fun getCategoryFromApi(callback: CategoriesCallback)
+    fun getCategoriesList(callback: CategoriesCallback)
 
     suspend fun getEventList(page: String, category: Category): EventList?
 }

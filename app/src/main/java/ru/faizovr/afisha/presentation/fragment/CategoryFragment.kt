@@ -2,6 +2,7 @@ package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_category_list.*
@@ -23,11 +24,15 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (requireActivity() as MainActivity).supportActionBar?.title =
-            getString(R.string.category_title)
+        setupToolbar()
         setupPresenter()
         setupView()
+    }
+
+    private fun setupToolbar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.category_title)
     }
 
     private fun setupView() {

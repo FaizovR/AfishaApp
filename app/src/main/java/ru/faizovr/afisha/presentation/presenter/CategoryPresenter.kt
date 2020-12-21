@@ -1,6 +1,5 @@
 package ru.faizovr.afisha.presentation.presenter
 
-import android.util.Log
 import ru.faizovr.afisha.data.Repository
 import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
 import ru.faizovr.afisha.domain.model.Category
@@ -14,12 +13,12 @@ class CategoryPresenter(
     private val categoryList: MutableList<Category> = mutableListOf()
 
     init {
-        repository.getCategoryFromApi(this)
+        repository.getCategoriesList(this)
         showProgressBar()
     }
 
     override fun onRetryClicked() {
-        repository.getCategoryFromApi(this)
+        repository.getCategoriesList(this)
         showProgressBar()
     }
 

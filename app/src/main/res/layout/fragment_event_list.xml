@@ -10,6 +10,8 @@
         android:id="@+id/recycler_view_event_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/backgroundColor"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/event_list_item_view_holder" />
 
@@ -39,6 +41,6 @@
         android:layout_marginTop="@dimen/spacing_huge_32"
         android:text="@string/action_retry"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </FrameLayout>

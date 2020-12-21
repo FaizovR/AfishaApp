@@ -14,7 +14,7 @@ import ru.faizovr.afisha.data.model.EventListResponse
 interface ApiService {
 
     @GET("event-categories/?lang=ru")
-    fun getListCategories(): Call<List<CategoriesResponse>>
+    fun getCategoriesList(): Call<List<CategoriesResponse>>
 
     @GET("events/")
     suspend fun getEvents(

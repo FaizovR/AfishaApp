@@ -12,13 +12,14 @@ import ru.faizovr.afisha.data.remote.service.ApiService
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
 
-class RepositoryImplementation(private val apiService: ApiService) : Repository {
-
-    private val categoryMapper: CategoryMapper = CategoryMapper()
+class RepositoryImplementation(
+    private val apiService: ApiService,
+    private val categoryMapper: CategoryMapper = CategoryMapper(),
     private val eventListMapper: EventListMapper = EventListMapper()
+) : Repository {
 
-    override fun getCategoryFromApi(callback: CategoriesCallback) {
-        apiService.getListCategories().enqueue(object : Callback<List<CategoriesResponse>> {
+    override fun getCategoriesList(callback: CategoriesCallback) {
+        apiService.getCategoriesList().enqueue(object : Callback<List<CategoriesResponse>> {
             override fun onFailure(call: Call<List<CategoriesResponse>>, t: Throwable) {
                 callback.onError()
             }

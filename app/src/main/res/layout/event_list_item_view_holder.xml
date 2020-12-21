@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_tiny_4">
-
-    <ImageView
-        android:id="@+id/image_view_event_holder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        tools:ignore="ContentDescription"
-        tools:src="@drawable/image_place_holder" />
+    android:layout_margin="@dimen/spacing_tiny_4"
+    app:cardCornerRadius="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#B3C5CAE9"
         android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_view_event_holder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/image_place_holder" />
 
         <TextView
             android:id="@+id/text_view_tittle_event_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:layout_margin="@dimen/spacing_tiny_4"
+            android:layout_margin="@dimen/spacing_normal_16"
             android:textSize="@dimen/font_large_24"
             tools:text="Описание заголовка" />
 
@@ -34,11 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_margin="@dimen/spacing_tiny_4"
+            android:layout_margin="@dimen/spacing_small_8"
             android:layout_marginTop="0dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:textSize="@dimen/font_normal_16"
             tools:text="Коротокое описание эвента" />
 
     </LinearLayout>
 
-</FrameLayout>
+</androidx.cardview.widget.CardView>
