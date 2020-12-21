@@ -1,21 +1,21 @@
 package ru.faizovr.afisha.data.mapper
 
-import ru.faizovr.afisha.data.model.CategoriesResponse
+import ru.faizovr.afisha.data.model.CategoryResponse
 import ru.faizovr.afisha.domain.model.Category
 
-class CategoryMapper : EntityMapper<CategoriesResponse, Category> {
+class CategoryMapper : EntityMapper<CategoryResponse, Category> {
 
-    override fun mapFromEntity(entity: CategoriesResponse): Category =
+    override fun mapFromEntity(entity: CategoryResponse): Category =
         Category(
             id = entity.id,
-            slug = entity.slug,
+            tag = entity.slug,
             name = entity.name
         )
 
-    override fun mapToEntity(domainModel: Category): CategoriesResponse =
-        CategoriesResponse(
+    override fun mapToEntity(domainModel: Category): CategoryResponse =
+        CategoryResponse(
             id = domainModel.id,
-            slug = domainModel.slug,
+            slug = domainModel.tag,
             name = domainModel.name
         )
 }

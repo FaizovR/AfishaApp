@@ -5,28 +5,28 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
-import ru.faizovr.afisha.data.model.CategoriesResponse
+import ru.faizovr.afisha.data.model.CategoryResponse
 import ru.faizovr.afisha.data.model.EventListResponse
 import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
 import ru.faizovr.afisha.data.remote.service.ApiService
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
 
-class RepositoryImplementation(
+class RepositoryImpl(
     private val apiService: ApiService,
     private val categoryMapper: CategoryMapper = CategoryMapper(),
     private val eventListMapper: EventListMapper = EventListMapper()
 ) : Repository {
 
     override fun getCategoriesList(callback: CategoriesCallback) {
-        apiService.getCategoriesList().enqueue(object : Callback<List<CategoriesResponse>> {
-            override fun onFailure(call: Call<List<CategoriesResponse>>, t: Throwable) {
+        apiService.getCategoriesList().enqueue(object : Callback<List<CategoryResponse>> {
+            override fun onFailure(call: Call<List<CategoryResponse>>, t: Throwable) {
                 callback.onError()
             }
 
             override fun onResponse(
-                call: Call<List<CategoriesResponse>>,
-                response: Response<List<CategoriesResponse>>,
+                call: Call<List<CategoryResponse>>,
+                response: Response<List<CategoryResponse>>,
             ) {
                 callback.onCategoryDataLoaded(
                     response.body()?.map { categoryMapper.mapFromEntity(it) })
@@ -38,7 +38,7 @@ class RepositoryImplementation(
     override suspend fun getEventList(page: String, category: Category): EventList? {
         val eventPage = apiService.getEvents(
             LIST_FIELDS_TO_RETRIEVE,
-            category.slug,
+            category.tag,
             PAGE_SIZE,
             page,
             ORDER_PUBLICATION_DATE,

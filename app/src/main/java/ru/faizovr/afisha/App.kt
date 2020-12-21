@@ -1,12 +1,12 @@
 package ru.faizovr.afisha
 
 import android.app.Application
-import ru.faizovr.afisha.data.RepositoryImplementation
+import ru.faizovr.afisha.data.RepositoryImpl
 import ru.faizovr.afisha.data.remote.service.ApiService
 
 class App : Application() {
 
-    lateinit var repository: RepositoryImplementation
+    lateinit var repository: RepositoryImpl
         private set
 
     override fun onCreate() {
@@ -15,6 +15,6 @@ class App : Application() {
     }
 
     private fun setupRepository() {
-        repository = RepositoryImplementation(ApiService.instance)
+        repository = RepositoryImpl(ApiService.instance)
     }
 }

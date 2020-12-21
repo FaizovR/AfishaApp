@@ -8,13 +8,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.faizovr.afisha.data.model.CategoriesResponse
+import ru.faizovr.afisha.data.model.CategoryResponse
 import ru.faizovr.afisha.data.model.EventListResponse
 
 interface ApiService {
 
     @GET("event-categories/?lang=ru")
-    fun getCategoriesList(): Call<List<CategoriesResponse>>
+    fun getCategoriesList(): Call<List<CategoryResponse>>
 
     @GET("events/")
     suspend fun getEvents(
