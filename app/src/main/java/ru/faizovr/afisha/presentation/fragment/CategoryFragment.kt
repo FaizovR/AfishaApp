@@ -24,7 +24,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (requireActivity() as MainActivity).supportActionBar?.title = getString(R.string.category_title)
+        (requireActivity() as MainActivity).supportActionBar?.title =
+            getString(R.string.category_title)
         setupPresenter()
         setupView()
     }
@@ -35,9 +36,9 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
     }
 
     private fun setupPresenter() {
-        val app: App = activity?.application as App
+        val app: App = requireActivity().application as App?
+            ?: throw IllegalStateException("Fragment $this not attached to an app.")
         categoryPresenter = CategoryPresenter(this, app.repository)
-        categoryPresenter?.init()
     }
 
     override fun showNewFragment(category: Category) {
@@ -62,8 +63,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
     }
 
     override fun showList(list: List<String>) {
-        val adapter = recycler_view_category.adapter as CategoryAdapter
-        adapter.updateList(list)
+        val adapter = recycler_view_category.adapter as CategoryAdapter?
+        adapter?.updateList(list)
     }
 
     companion object {

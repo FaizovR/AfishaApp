@@ -14,7 +14,6 @@ interface CategoryContract {
     }
 
     interface Presenter {
-        fun init()
         fun onRetryClicked()
         fun onCategoryItemClickedForPosition(position: Int)
     }

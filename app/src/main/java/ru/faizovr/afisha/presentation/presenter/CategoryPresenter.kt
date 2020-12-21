@@ -13,7 +13,7 @@ class CategoryPresenter(
 
     private val categoryList: MutableList<Category> = mutableListOf()
 
-    override fun init() {
+    init {
         repository.getCategoryFromApi(this)
         showProgressBar()
     }
@@ -25,7 +25,6 @@ class CategoryPresenter(
 
     override fun onCategoryItemClickedForPosition(position: Int) {
         view.showNewFragment(categoryList[position])
-        Log.d("TAG", "onCategoryItemClickedForPosition: category name = ${categoryList[position].name}")
     }
 
     override fun onCategoryDataLoaded(data: List<Category>?) {
@@ -59,6 +58,6 @@ class CategoryPresenter(
         view.setRetryButtonVisibility(false)
         view.setErrorTextVisibility(false)
         view.setProgressBarVisibility(false)
-        view.showList(list.map { it.name })
+        view.showList(list.map(Category::name))
     }
 }
