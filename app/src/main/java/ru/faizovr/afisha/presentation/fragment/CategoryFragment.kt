@@ -1,13 +1,15 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_category_list.*
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
+import ru.faizovr.afisha.databinding.FragmentCategoryListBinding
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.CategoryAdapter
@@ -17,13 +19,29 @@ import ru.faizovr.afisha.presentation.presenter.CategoryPresenter
 class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryContract.View {
 
     private var categoryPresenter: CategoryContract.Presenter? = null
-
+    private var _binding: FragmentCategoryListBinding? = null
+    private val binding get() = _binding!!
     private val onMenuClicked: (position: Int) -> Unit = { position: Int ->
         categoryPresenter?.onCategoryItemClickedForPosition(position)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCategoryListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupToolbar()
         setupPresenter()
         setupView()
@@ -36,8 +54,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
     }
 
     private fun setupView() {
-        recycler_view_category.adapter = CategoryAdapter(onMenuClicked)
-        button_menu_retry.setOnClickListener { categoryPresenter?.onRetryClicked() }
+        binding.recyclerViewCategory.adapter = CategoryAdapter(onMenuClicked)
+        binding.buttonMenuRetry.setOnClickListener { categoryPresenter?.onRetryClicked() }
     }
 
     private fun setupPresenter() {
@@ -52,23 +70,23 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
     }
 
     override fun setRetryButtonVisibility(isVisible: Boolean) {
-        button_menu_retry.isVisible = isVisible
+        binding.buttonMenuRetry.isVisible = isVisible
     }
 
     override fun setCategoryListVisibility(isVisible: Boolean) {
-        recycler_view_category.isVisible = isVisible
+        binding.recyclerViewCategory.isVisible = isVisible
     }
 
     override fun setErrorTextVisibility(isVisible: Boolean) {
-        text_view_category_failed_message.isVisible = isVisible
+        binding.textViewCategoryFailedMessage.isVisible = isVisible
     }
 
     override fun setProgressBarVisibility(isVisible: Boolean) {
-        progress_bar_category.isVisible = isVisible
+        binding.progressBarCategory.isVisible = isVisible
     }
 
     override fun showList(list: List<String>) {
-        val adapter = recycler_view_category.adapter as CategoryAdapter?
+        val adapter = binding.recyclerViewCategory.adapter as CategoryAdapter?
         adapter?.updateList(list)
     }
 

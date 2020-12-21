@@ -4,16 +4,19 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.event_list_footer_view_holder.view.*
+import ru.faizovr.afisha.databinding.EventListFooterViewHolderBinding
 
 class EventListFooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    private val binding: EventListFooterViewHolderBinding =
+        EventListFooterViewHolderBinding.bind(itemView)
+
     fun bind(state: LoadState, retry: () -> Unit) {
         val isLoading = state is LoadState.Loading
-        itemView.button_footer_retry.isVisible = !isLoading
-        itemView.text_view_footer_error.isVisible = !isLoading
-        itemView.progress_bar_footer.isVisible = isLoading
-        itemView.button_footer_retry.setOnClickListener {
+        binding.buttonFooterRetry.isVisible = !isLoading
+        binding.textViewFooterError.isVisible = !isLoading
+        binding.progressBarFooter.isVisible = isLoading
+        binding.buttonFooterRetry.setOnClickListener {
             retry.invoke()
         }
     }

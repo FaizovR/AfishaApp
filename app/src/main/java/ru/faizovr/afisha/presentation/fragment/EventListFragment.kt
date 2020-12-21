@@ -1,18 +1,20 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
-import kotlinx.android.synthetic.main.fragment_event_list.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
+import ru.faizovr.afisha.databinding.FragmentEventListBinding
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventShortInfo
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter
@@ -24,6 +26,17 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     EventListContract.View {
 
     private var presenter: EventListContract.Presenter? = null
+    private var _binding: FragmentEventListBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentEventListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,14 +49,14 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     override fun setupView() {
-        button_event_list_retry.setOnClickListener {
+        binding.buttonEventListRetry.setOnClickListener {
             presenter?.onRetryButtonClicked()
         }
     }
 
     override fun setupList(eventListAdapter: EventListAdapter) {
         eventListAdapter.addLoadStateListener { loadState -> presenter?.onLoadStateChanged(loadState) }
-        recycler_view_event_list.apply {
+        binding.recyclerViewEventList.apply {
             setHasFixedSize(true)
             adapter = eventListAdapter.withLoadStateFooter(
                 footer = FooterAdapter { eventListAdapter.retry() }
@@ -61,19 +74,19 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     override fun setRetryButtonVisibility(isVisible: Boolean) {
-        button_event_list_retry.isVisible = isVisible
+        binding.buttonEventListRetry.isVisible = isVisible
     }
 
     override fun setErrorTextVisibility(isVisible: Boolean) {
-        text_view_event_list_failed_message.isVisible = isVisible
+        binding.textViewEventListFailedMessage.isVisible = isVisible
     }
 
     override fun setProgressBarVisibility(isVisible: Boolean) {
-        progress_bar_event_list.isVisible = isVisible
+        binding.progressBarEventList.isVisible = isVisible
     }
 
     override fun setEventListVisibility(isVisible: Boolean) {
-        recycler_view_event_list.isVisible = isVisible
+        binding.recyclerViewEventList.isVisible = isVisible
     }
 
     override fun setupDataToList(
@@ -81,7 +94,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         eventListAdapter: EventListAdapter,
     ) {
         lifecycleScope.launch {
-            events.collectLatest { eventListAdapter.submitData(it) }
+            events.collectLatest(eventListAdapter::submitData)
         }
     }
 
