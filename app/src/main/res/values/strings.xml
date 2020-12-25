@@ -3,4 +3,5 @@
     <string name="category_title">Choose a category</string>
     <string name="error_with_internet_connections">Error with Internet Connections</string>
     <string name="action_retry">Retry</string>
+    <string name="date_example">31.12.2020 – 01.01.2021</string>
 </resources>

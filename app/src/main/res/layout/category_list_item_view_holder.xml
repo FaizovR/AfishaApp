@@ -10,8 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/button_normal_16"
-        android:textSize="@dimen/font_large_24"
-        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceHeadline5"
         tools:text="Афиша" />
 
     <View
