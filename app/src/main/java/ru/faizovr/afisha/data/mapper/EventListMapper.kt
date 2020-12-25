@@ -1,16 +1,16 @@
 package ru.faizovr.afisha.data.mapper
 
-import ru.faizovr.afisha.data.model.EventListResponse
-import ru.faizovr.afisha.domain.model.EventList
+import ru.faizovr.afisha.data.model.EventListInfoResponse
+import ru.faizovr.afisha.domain.model.EventListInfo
 
-class EventListMapper : EntityMapper<EventListResponse, EventList> {
+class EventListMapper : EntityMapper<EventListInfoResponse, EventListInfo> {
 
     private val eventShortInfoMapper: EventShortInfoMapper = EventShortInfoMapper()
 
-    override fun mapFromEntity(entity: EventListResponse): EventList {
+    override fun mapFromEntity(entity: EventListInfoResponse): EventListInfo {
         val next = entity.next?.substringAfterLast("page=")?.substringBefore("&")
         val previous = entity.previous?.substringAfterLast("page=")?.substringBefore("&")
-        return EventList(
+        return EventListInfo(
             count = entity.count,
             nextPage = next,
             previousPage = previous,

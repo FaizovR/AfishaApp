@@ -23,4 +23,10 @@ open class BaseRepository {
             else -> Result.Success(responseBody)
         }
     }
+
+    fun <T, K> mapResult(list: List<T>, mapper: (T) -> (K)) =
+        list.map { mapper(it) }
+
+    fun <T, K> mapResult(response: T, mapper: (T) -> (K)) =
+        mapper(response)
 }

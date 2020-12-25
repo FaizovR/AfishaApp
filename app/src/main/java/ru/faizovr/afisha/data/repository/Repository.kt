@@ -2,11 +2,11 @@ package ru.faizovr.afisha.data.repository
 
 import ru.faizovr.afisha.data.wrapper.Result
 import ru.faizovr.afisha.domain.model.Category
-import ru.faizovr.afisha.domain.model.EventList
+import ru.faizovr.afisha.domain.model.EventListInfo
 
 interface Repository {
 
     suspend fun getCategoriesList(): Result<List<Category>>
 
-    suspend fun getEventList(page: String, category: Category): EventList?
+    suspend fun getEventList(page: String, category: Category): Result<EventListInfo>
 }

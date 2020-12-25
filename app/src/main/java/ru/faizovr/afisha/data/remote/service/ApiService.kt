@@ -4,7 +4,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.faizovr.afisha.data.model.CategoryResponse
-import ru.faizovr.afisha.data.model.EventListResponse
+import ru.faizovr.afisha.data.model.EventListInfoResponse
 
 interface ApiService {
 
@@ -20,7 +20,7 @@ interface ApiService {
         @Query("order_by") order: String,
         @Query("actual_since") actual_since: String,
         @Query("text_format") text_format: String = "text"
-    ): Response<EventListResponse>
+    ): Response<EventListInfoResponse>
 
     companion object {
         private const val API_VERSION = "v1.4"

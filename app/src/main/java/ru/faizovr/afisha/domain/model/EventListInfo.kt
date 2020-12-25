@@ -1,6 +1,6 @@
 package ru.faizovr.afisha.domain.model
 
-class EventList(
+class EventListInfo(
     val count: Long,
     val nextPage: String?,
     val previousPage: String?,
