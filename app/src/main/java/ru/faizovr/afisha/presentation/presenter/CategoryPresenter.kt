@@ -1,41 +1,50 @@
 package ru.faizovr.afisha.presentation.presenter
 
+import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.faizovr.afisha.data.Repository
-import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
+import ru.faizovr.afisha.data.Result
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.presentation.contract.CategoryContract
 
 class CategoryPresenter(
     private val view: CategoryContract.View,
     private val repository: Repository
-) : CategoryContract.Presenter, CategoriesCallback {
+) : CategoryContract.Presenter {
 
     private val categoryList: MutableList<Category> = mutableListOf()
 
     init {
-        repository.getCategoriesList(this)
         showProgressBar()
+        loadCategoryList()
+    }
+
+    private fun loadCategoryList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = repository.getCategoriesList()
+            withContext(Dispatchers.Main) {
+                if (result is Result.Success) {
+                    showList(result.value)
+                    categoryList.clear()
+                    categoryList.addAll(result.value)
+                } else {
+                    Log.e("TAG", "loadCategoryList: ${(result as Result.Error).exception}")
+                    showErrorText()
+                }
+            }
+        }
     }
 
     override fun onRetryClicked() {
-        repository.getCategoriesList(this)
         showProgressBar()
+        loadCategoryList()
     }
 
     override fun onCategoryItemClickedForPosition(position: Int) {
         view.showNewFragment(categoryList[position])
-    }
-
-    override fun onCategoryDataLoaded(data: List<Category>?) {
-        if (data != null) {
-            showList(data)
-            categoryList.clear()
-            categoryList.addAll(data)
-        }
-    }
-
-    override fun onError() {
-        showErrorText()
     }
 
     private fun showErrorText() {

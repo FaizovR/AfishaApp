@@ -1,12 +1,11 @@
 package ru.faizovr.afisha.data
 
-import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
 
 interface Repository {
 
-    fun getCategoriesList(callback: CategoriesCallback)
+    suspend fun getCategoriesList(): Result<List<Category>>
 
     suspend fun getEventList(page: String, category: Category): EventList?
 }

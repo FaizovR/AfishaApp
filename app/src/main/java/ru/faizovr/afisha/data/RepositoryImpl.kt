@@ -1,13 +1,9 @@
 package ru.faizovr.afisha.data
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
 import ru.faizovr.afisha.data.model.CategoryResponse
 import ru.faizovr.afisha.data.model.EventListResponse
-import ru.faizovr.afisha.data.remote.callback.CategoriesCallback
 import ru.faizovr.afisha.data.remote.service.ApiService
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
@@ -16,22 +12,15 @@ class RepositoryImpl(
     private val apiService: ApiService,
     private val categoryMapper: CategoryMapper = CategoryMapper(),
     private val eventListMapper: EventListMapper = EventListMapper()
-) : Repository {
+) : Repository, BaseRepository() {
 
-    override fun getCategoriesList(callback: CategoriesCallback) {
-        apiService.getCategoriesList().enqueue(object : Callback<List<CategoryResponse>> {
-            override fun onFailure(call: Call<List<CategoryResponse>>, t: Throwable) {
-                callback.onError()
-            }
-
-            override fun onResponse(
-                call: Call<List<CategoryResponse>>,
-                response: Response<List<CategoryResponse>>,
-            ) {
-                callback.onCategoryDataLoaded(
-                    response.body()?.map { categoryMapper.mapFromEntity(it) })
-            }
-        })
+    override suspend fun getCategoriesList(): Result<List<Category>> {
+        val result: Result<List<CategoryResponse>> =
+            safeApiCall({ apiService.getCategoriesList() }, "ERROR")
+        return if (result is Result.Success) {
+            Result.Success(result.value.map { categoryMapper.mapFromEntity(it) })
+        } else
+            Result.Error((result as Result.Error).exception)
     }
 
 

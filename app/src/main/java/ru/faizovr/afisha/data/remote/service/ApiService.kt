@@ -1,6 +1,5 @@
 package ru.faizovr.afisha.data.remote.service
 
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -10,7 +9,7 @@ import ru.faizovr.afisha.data.model.EventListResponse
 interface ApiService {
 
     @GET("event-categories/?lang=ru")
-    fun getCategoriesList(): Call<List<CategoryResponse>>
+    suspend fun getCategoriesList(): Response<List<CategoryResponse>>
 
     @GET("events/")
     suspend fun getEvents(
