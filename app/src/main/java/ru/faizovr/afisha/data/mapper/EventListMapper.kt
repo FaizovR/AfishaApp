@@ -17,12 +17,4 @@ class EventListMapper : EntityMapper<EventListResponse, EventList> {
             events = entity.results?.map { eventShortInfoMapper.mapFromEntity(it) } ?: listOf()
         )
     }
-
-    override fun mapToEntity(domainModel: EventList): EventListResponse =
-        EventListResponse(
-            count = domainModel.count,
-            next = "1",
-            previous = "2",
-            results = domainModel.events.map { eventShortInfoMapper.mapToEntity(it) }
-        )
 }

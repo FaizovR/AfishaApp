@@ -11,11 +11,4 @@ class CategoryMapper : EntityMapper<CategoryResponse, Category> {
             tag = entity.slug,
             name = entity.name
         )
-
-    override fun mapToEntity(domainModel: Category): CategoryResponse =
-        CategoryResponse(
-            id = domainModel.id,
-            slug = domainModel.tag,
-            name = domainModel.name
-        )
 }

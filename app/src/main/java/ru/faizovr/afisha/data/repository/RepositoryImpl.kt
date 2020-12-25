@@ -1,5 +1,6 @@
 package ru.faizovr.afisha.data.repository
 
+import ru.faizovr.afisha.data.Date
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
 import ru.faizovr.afisha.data.model.CategoryResponse
@@ -32,7 +33,7 @@ class RepositoryImpl(
             PAGE_SIZE,
             page,
             ORDER_PUBLICATION_DATE,
-            ACTUAL_SINCE
+            Date().currentTimeInMilliseconds()
 
         )
         val body: EventListResponse? = eventPage.body()

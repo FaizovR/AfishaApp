@@ -10,7 +10,7 @@ class EventListDiffUtil : DiffUtil.ItemCallback<EventShortInfo>() {
     override fun areContentsTheSame(oldItem: EventShortInfo, newItem: EventShortInfo): Boolean =
         when {
             oldItem.description != newItem.description -> false
-            oldItem.image != newItem.image -> false
+            oldItem.images != newItem.images -> false
             oldItem.slug != newItem.slug -> false
             oldItem.title != newItem.title -> false
             else -> true

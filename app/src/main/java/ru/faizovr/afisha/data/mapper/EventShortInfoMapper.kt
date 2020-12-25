@@ -1,7 +1,9 @@
 package ru.faizovr.afisha.data.mapper
 
 import ru.faizovr.afisha.data.model.EventShortInfoResponse
+import ru.faizovr.afisha.data.model.ImagesResponse
 import ru.faizovr.afisha.domain.model.EventShortInfo
+import ru.faizovr.afisha.domain.model.Images
 
 class EventShortInfoMapper : EntityMapper<EventShortInfoResponse, EventShortInfo> {
     override fun mapFromEntity(entity: EventShortInfoResponse): EventShortInfo =
@@ -10,15 +12,9 @@ class EventShortInfoMapper : EntityMapper<EventShortInfoResponse, EventShortInfo
             title = entity.title ?: "",
             slug = entity.slug ?: "",
             description = entity.description ?: "",
-            image = entity.image ?: ""
+            images = mapImage(entity.images)
         )
 
-    override fun mapToEntity(domainModel: EventShortInfo): EventShortInfoResponse =
-        EventShortInfoResponse(
-            id = domainModel.id,
-            title = domainModel.title,
-            slug = domainModel.slug,
-            description = domainModel.description,
-            image = domainModel.image
-        )
+    private fun mapImage(imagesResponse: List<ImagesResponse>?): List<Images> =
+        imagesResponse?.map { Images(it.image) } ?: emptyList()
 }
