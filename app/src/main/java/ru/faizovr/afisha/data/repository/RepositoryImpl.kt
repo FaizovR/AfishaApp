@@ -1,10 +1,11 @@
-package ru.faizovr.afisha.data
+package ru.faizovr.afisha.data.repository
 
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
 import ru.faizovr.afisha.data.model.CategoryResponse
 import ru.faizovr.afisha.data.model.EventListResponse
 import ru.faizovr.afisha.data.remote.service.ApiService
+import ru.faizovr.afisha.data.wrapper.Result
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
 

@@ -5,8 +5,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.faizovr.afisha.data.Repository
-import ru.faizovr.afisha.data.Result
+import ru.faizovr.afisha.data.repository.Repository
+import ru.faizovr.afisha.data.wrapper.Result
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.presentation.contract.CategoryContract
 

@@ -1,8 +1,9 @@
-package ru.faizovr.afisha.data
+package ru.faizovr.afisha.data.repository
 
 import android.accounts.NetworkErrorException
 import retrofit2.HttpException
 import retrofit2.Response
+import ru.faizovr.afisha.data.wrapper.Result
 
 open class BaseRepository {
     suspend fun <T : Any> safeApiCall(

@@ -2,8 +2,8 @@ package ru.faizovr.afisha.presentation.presenter
 
 import androidx.paging.*
 import kotlinx.coroutines.flow.Flow
-import ru.faizovr.afisha.data.EventListDataSource
-import ru.faizovr.afisha.data.Repository
+import ru.faizovr.afisha.data.datasource.EventListDataSource
+import ru.faizovr.afisha.data.repository.Repository
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventShortInfo
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter

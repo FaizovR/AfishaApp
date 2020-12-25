@@ -1,9 +1,9 @@
 package ru.faizovr.afisha
 
 import android.app.Application
-import ru.faizovr.afisha.data.RepositoryImpl
 import ru.faizovr.afisha.data.remote.service.ApiService
 import ru.faizovr.afisha.data.remote.service.ApiServiceBuilder
+import ru.faizovr.afisha.data.repository.RepositoryImpl
 
 class App : Application() {
 

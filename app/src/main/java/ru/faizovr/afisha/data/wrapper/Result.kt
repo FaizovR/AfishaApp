@@ -1,4 +1,4 @@
-package ru.faizovr.afisha.data
+package ru.faizovr.afisha.data.wrapper
 
 sealed class Result<out T> {
     data class Success<out T>(val value: T) : Result<T>()

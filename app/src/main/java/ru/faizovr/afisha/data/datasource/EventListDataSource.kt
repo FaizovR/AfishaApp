@@ -1,7 +1,8 @@
-package ru.faizovr.afisha.data
+package ru.faizovr.afisha.data.datasource
 
 import android.util.Log
 import androidx.paging.PagingSource
+import ru.faizovr.afisha.data.repository.Repository
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventList
 import ru.faizovr.afisha.domain.model.EventShortInfo
