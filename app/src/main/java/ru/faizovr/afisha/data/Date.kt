@@ -1,8 +1,12 @@
 package ru.faizovr.afisha.data
 
 import java.util.*
+import java.util.Date
 
 class Date {
-    fun currentTimeInMilliseconds(): String =
-        Calendar.getInstance().timeInMillis.div(1000).toString()
+    fun currentTimeInMilliseconds(): Long =
+        System.currentTimeMillis().div(1000)
+
+    fun getCurrentDate(): Date =
+        Calendar.getInstance().time
 }

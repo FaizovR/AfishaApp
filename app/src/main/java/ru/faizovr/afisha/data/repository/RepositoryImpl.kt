@@ -36,7 +36,8 @@ class RepositoryImpl(
                         PAGE_SIZE,
                         page,
                         ORDER_PUBLICATION_DATE,
-                        Date().currentTimeInMilliseconds()
+                        Date().currentTimeInMilliseconds(),
+                        LOCATION
                     )
                 }, "Error"
             )
@@ -49,6 +50,7 @@ class RepositoryImpl(
 
     companion object {
         private const val LIST_FIELDS_TO_RETRIEVE = "id,dates,title,place,price,description,images"
+        private const val LOCATION = "msk"
         private const val PAGE_SIZE = 20
         private const val ORDER_PUBLICATION_DATE = "publication_date"
     }

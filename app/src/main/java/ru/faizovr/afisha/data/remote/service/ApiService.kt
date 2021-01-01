@@ -18,7 +18,8 @@ interface ApiService {
         @Query("page_size") pageSize: Int,
         @Query("page") page: String,
         @Query("order_by") order: String,
-        @Query("actual_since") actual_since: String,
+        @Query("actual_since") actual_since: Long,
+        @Query("location") location: String,
         @Query("text_format") text_format: String = "text"
     ): Response<EventListInfoResponse>
 

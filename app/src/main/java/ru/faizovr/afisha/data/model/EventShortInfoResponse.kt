@@ -5,5 +5,6 @@ class EventShortInfoResponse(
     val title: String?,
     val slug: String?,
     val description: String?,
+    val dates: List<DatesResponse>?,
     val images: List<ImagesResponse>?
 )
