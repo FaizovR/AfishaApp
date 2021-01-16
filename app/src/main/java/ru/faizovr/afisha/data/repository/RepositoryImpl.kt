@@ -2,18 +2,22 @@ package ru.faizovr.afisha.data.repository
 
 import ru.faizovr.afisha.data.Date
 import ru.faizovr.afisha.data.mapper.CategoryMapper
+import ru.faizovr.afisha.data.mapper.EventDetailMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
 import ru.faizovr.afisha.data.model.CategoryResponse
+import ru.faizovr.afisha.data.model.EventDetailInfoResponse
 import ru.faizovr.afisha.data.model.EventListInfoResponse
 import ru.faizovr.afisha.data.remote.service.ApiService
 import ru.faizovr.afisha.data.wrapper.Result
 import ru.faizovr.afisha.domain.model.Category
+import ru.faizovr.afisha.domain.model.EventDetailInfo
 import ru.faizovr.afisha.domain.model.EventListInfo
 
 class RepositoryImpl(
     private val apiService: ApiService,
     private val categoryMapper: CategoryMapper = CategoryMapper(),
-    private val eventListMapper: EventListMapper = EventListMapper()
+    private val eventListMapper: EventListMapper = EventListMapper(),
+    private val eventDetailMapper: EventDetailMapper = EventDetailMapper()
 ) : Repository, BaseRepository() {
 
     override suspend fun getCategoriesList(): Result<List<Category>> {
@@ -26,13 +30,13 @@ class RepositoryImpl(
     }
 
 
-    override suspend fun getEventList(page: String, category: Category): Result<EventListInfo> {
+    override suspend fun getEventList(page: String, categoryTag: String): Result<EventListInfo> {
         val result: Result<EventListInfoResponse> =
             safeApiCall(
                 {
                     apiService.getEvents(
                         LIST_FIELDS_TO_RETRIEVE,
-                        category.tag,
+                        categoryTag,
                         PAGE_SIZE,
                         page,
                         ORDER_PUBLICATION_DATE,
@@ -43,6 +47,19 @@ class RepositoryImpl(
             )
         return if (result is Result.Success) {
             Result.Success(mapResult(result.value, eventListMapper::mapFromEntity))
+        } else {
+            Result.Error((result as Result.Error).exception)
+        }
+    }
+
+    override suspend fun getEventDetail(eventId: Long): Result<EventDetailInfo> {
+        val result: Result<EventDetailInfoResponse> =
+            safeApiCall(
+                { apiService.getEventInfo(eventId) }, "Error"
+            )
+        return if (result is Result.Success) {
+            Result.Success(mapResult(result.value, eventDetailMapper::mapFromEntity))
+
         } else {
             Result.Error((result as Result.Error).exception)
         }

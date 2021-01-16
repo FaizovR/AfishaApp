@@ -19,8 +19,7 @@ import ru.faizovr.afisha.presentation.presenter.CategoryPresenter
 class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryContract.View {
 
     private var categoryPresenter: CategoryContract.Presenter? = null
-    private var _binding: FragmentCategoryListBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentCategoryListBinding
     private val onMenuClicked: (position: Int) -> Unit = { position: Int ->
         categoryPresenter?.onCategoryItemClickedForPosition(position)
     }
@@ -30,13 +29,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCategoryListBinding.inflate(inflater, container, false)
+        binding = FragmentCategoryListBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +59,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category_list), CategoryCont
     }
 
     override fun showNewFragment(category: Category) {
-        val fragment: Fragment = EventListFragment.newInstance(category)
+        val fragment: Fragment = EventListFragment.newInstance(category.tag, category.name)
         (requireActivity() as MainActivity).replaceFragment(fragment)
     }
 

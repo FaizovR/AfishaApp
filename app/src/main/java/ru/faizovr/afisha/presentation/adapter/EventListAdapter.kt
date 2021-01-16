@@ -9,7 +9,7 @@ import ru.faizovr.afisha.domain.model.EventShortInfo
 import ru.faizovr.afisha.presentation.diffutil.EventListDiffUtil
 import ru.faizovr.afisha.presentation.viewholder.EventListItemViewHolder
 
-class EventListAdapter :
+class EventListAdapter(private val onEventClickListener: (eventShortInfo: EventShortInfo) -> Unit) :
     PagingDataAdapter<EventShortInfo, EventListItemViewHolder>(EventListDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventListItemViewHolder {
@@ -19,6 +19,6 @@ class EventListAdapter :
     }
 
     override fun onBindViewHolder(holder: EventListItemViewHolder, position: Int) {
-        getItem(position)?.let(holder::bind)
+        getItem(position)?.let { holder.bind(it, onEventClickListener) }
     }
 }

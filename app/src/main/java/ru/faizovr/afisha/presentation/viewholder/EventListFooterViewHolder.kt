@@ -11,6 +11,7 @@ class EventListFooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
     private val binding: EventListFooterViewHolderBinding =
         EventListFooterViewHolderBinding.bind(itemView)
 
+
     fun bind(state: LoadState, retry: () -> Unit) {
         val isLoading = state is LoadState.Loading
         binding.buttonFooterRetry.isVisible = !isLoading

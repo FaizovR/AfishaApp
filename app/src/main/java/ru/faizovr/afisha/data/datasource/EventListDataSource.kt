@@ -4,19 +4,18 @@ import android.util.Log
 import androidx.paging.PagingSource
 import ru.faizovr.afisha.data.repository.Repository
 import ru.faizovr.afisha.data.wrapper.Result
-import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventListInfo
 import ru.faizovr.afisha.domain.model.EventShortInfo
 
 class EventListDataSource(
     private val repository: Repository,
-    private val category: Category,
+    private val categoryTag: String,
 ) :
     PagingSource<String, EventShortInfo>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, EventShortInfo> {
         val currentLoadingPageKey = params.key ?: "1"
-        val result = repository.getEventList(currentLoadingPageKey, category)
+        val result = repository.getEventList(currentLoadingPageKey, categoryTag)
         return when (result) {
             is Result.Success -> {
                 val eventList: EventListInfo = result.value

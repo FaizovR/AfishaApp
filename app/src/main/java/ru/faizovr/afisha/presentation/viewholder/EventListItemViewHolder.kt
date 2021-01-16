@@ -12,21 +12,50 @@ import ru.faizovr.afisha.domain.model.EventShortInfo
 import java.text.SimpleDateFormat
 import java.util.*
 
+// TODO: 01.01.2021 перекинуть логику в Presenter/ Нарушенен принцип SOLID - S, принцип единственной отвественности
+
 class EventListItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val binding: EventListItemViewHolderBinding =
         EventListItemViewHolderBinding.bind(itemView)
 
-    fun bind(eventShortInfo: EventShortInfo) {
+    private fun setEventImage(url: String) {
         Glide.with(itemView)
-            .load(eventShortInfo.images.first().image)
+            .load(url)
             .placeholder(R.color.backgroundColor)
             .into(binding.imageViewEventHolder)
-        val bindDate = bindDate(eventShortInfo.dates)
+    }
+
+    private fun setEventDate(datesList: List<Dates>) {
+        val bindDate = bindDate(datesList)
         binding.textViewDateEvent.text = bindDate
         binding.textViewDateEvent.isVisible = bindDate.isNotEmpty()
-        binding.textViewTittleEventHolder.text = eventShortInfo.title
-        binding.textViewDescriptionEventHolder.text = eventShortInfo.description
+    }
+
+    private fun setEventTittle(title: String) {
+        binding.textViewTittleEventHolder.text = title
+    }
+
+    private fun setEventDescription(description: String) {
+        binding.textViewDescriptionEventHolder.text = description
+    }
+
+    private fun setOnEventClickListener(
+        eventShortInfo: EventShortInfo,
+        onEventClickListener: (eventShortInfo: EventShortInfo) -> Unit
+    ) {
+        binding.root.setOnClickListener { onEventClickListener(eventShortInfo) }
+    }
+
+    fun bind(
+        eventShortInfo: EventShortInfo,
+        onEventClickListener: (eventShortInfo: EventShortInfo) -> Unit
+    ) {
+        setEventImage(eventShortInfo.images.first().image)
+        setEventDate(eventShortInfo.dates)
+        setEventTittle(eventShortInfo.title)
+        setEventDescription(eventShortInfo.description)
+        setOnEventClickListener(eventShortInfo, onEventClickListener)
     }
 
     private fun bindDate(dates: List<Dates>): String {

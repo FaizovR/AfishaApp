@@ -4,35 +4,30 @@ import androidx.paging.*
 import kotlinx.coroutines.flow.Flow
 import ru.faizovr.afisha.data.datasource.EventListDataSource
 import ru.faizovr.afisha.data.repository.Repository
-import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventShortInfo
-import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.contract.EventListContract
 
 class EventListPresenter(
     private val view: EventListContract.View,
     private val repository: Repository,
-    private val category: Category,
+    private val categoryTag: String,
 ) : EventListContract.Presenter {
 
-    private var eventListAdapter: EventListAdapter? = null
-    private lateinit var listData: Flow<PagingData<EventShortInfo>>
+    private var listData: Flow<PagingData<EventShortInfo>> = Pager(PagingConfig(pageSize = 20)) {
+        EventListDataSource(repository, categoryTag)
+    }.flow
 
-    override fun init() {
-        this.eventListAdapter = EventListAdapter()
-        listData = Pager(PagingConfig(pageSize = 20)) {
-            EventListDataSource(repository, category)
-        }.flow
-        val eventListAdapter = eventListAdapter
-        if (eventListAdapter != null) {
-            view.setupView()
-            view.setupList(eventListAdapter)
-            view.setupDataToList(listData, eventListAdapter)
-        }
+    init {
+        view.setupView()
+        view.setupDataToList(listData)
     }
 
     override fun onRetryButtonClicked() {
-        eventListAdapter?.retry()
+        view.onRetryClicked()
+    }
+
+    override fun onEventClicked(eventShortInfo: EventShortInfo) {
+        view.showNewFragment(eventShortInfo)
     }
 
     override fun onLoadStateChanged(loadState: CombinedLoadStates) {

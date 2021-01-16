@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.FragmentEventListBinding
-import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.domain.model.EventShortInfo
+import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.adapter.FooterAdapter
 import ru.faizovr.afisha.presentation.contract.EventListContract
@@ -25,32 +25,33 @@ import ru.faizovr.afisha.presentation.presenter.EventListPresenter
 class EventListFragment : Fragment(R.layout.fragment_event_list),
     EventListContract.View {
 
+    private var onEventClicked: (eventShortInfo: EventShortInfo) -> Unit = { eventShortInfo ->
+        presenter?.onEventClicked(eventShortInfo)
+    }
     private var presenter: EventListContract.Presenter? = null
-    private var _binding: FragmentEventListBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentEventListBinding
+    private var eventListAdapter: EventListAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEventListBinding.inflate(inflater, container, false)
+        binding = FragmentEventListBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+        setupList()
         setupPresenter()
     }
 
     private fun setupToolbar() {
+        val title: String = arguments?.getString(EVENT_LIST_CATEGORY_TITLE_KEY) ?: ""
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
 
     override fun setupView() {
@@ -59,23 +60,27 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         }
     }
 
-    override fun setupList(eventListAdapter: EventListAdapter) {
-        eventListAdapter.addLoadStateListener { loadState -> presenter?.onLoadStateChanged(loadState) }
+    private fun setupList() {
+        eventListAdapter = EventListAdapter(onEventClicked)
+        eventListAdapter?.addLoadStateListener { loadState ->
+            presenter?.onLoadStateChanged(
+                loadState
+            )
+        }
         binding.recyclerViewEventList.apply {
             setHasFixedSize(true)
-            adapter = eventListAdapter.withLoadStateFooter(
-                footer = FooterAdapter { eventListAdapter.retry() }
+            adapter = eventListAdapter?.withLoadStateFooter(
+                footer = FooterAdapter { eventListAdapter?.retry() }
             )
         }
     }
 
     private fun setupPresenter() {
         val app: App = requireActivity().application as App
-        val category = arguments?.getParcelable<Category>(EVENT_LIST_CATEGORY_KEY)
-        if (category != null) {
-            presenter = EventListPresenter(this, app.repository, category)
+        val categoryTag = arguments?.getString(EVENT_LIST_CATEGORY_TAG_KEY)
+        if (categoryTag != null) {
+            presenter = EventListPresenter(this, app.repository, categoryTag)
         }
-        presenter?.init()
     }
 
     override fun setRetryButtonVisibility(isVisible: Boolean) {
@@ -94,20 +99,34 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         binding.recyclerViewEventList.isVisible = isVisible
     }
 
+    override fun onRetryClicked() {
+        eventListAdapter?.retry()
+    }
+
     override fun setupDataToList(
-        events: Flow<PagingData<EventShortInfo>>,
-        eventListAdapter: EventListAdapter,
+        events: Flow<PagingData<EventShortInfo>>
     ) {
         lifecycleScope.launch {
-            events.collectLatest(eventListAdapter::submitData)
+            val eventListAdapter1 = eventListAdapter
+            if (eventListAdapter1 != null) {
+                events.collectLatest(eventListAdapter1::submitData)
+            }
         }
     }
 
+    override fun showNewFragment(eventShortInfo: EventShortInfo) {
+        val fragment: Fragment =
+            EventDetailFragment.newInstance(eventShortInfo.id, eventShortInfo.title)
+        (requireActivity() as MainActivity).replaceFragment(fragment)
+    }
+
     companion object {
-        private const val EVENT_LIST_CATEGORY_KEY = "Event_Category"
-        fun newInstance(category: Category): EventListFragment {
+        private const val EVENT_LIST_CATEGORY_TAG_KEY = "Event_List_Category_tag"
+        private const val EVENT_LIST_CATEGORY_TITLE_KEY = "Event_List_Category_Title"
+        fun newInstance(categoryTag: String, categoryTitle: String): EventListFragment {
             val args = Bundle()
-            args.putParcelable(EVENT_LIST_CATEGORY_KEY, category)
+            args.putString(EVENT_LIST_CATEGORY_TAG_KEY, categoryTag)
+            args.putString(EVENT_LIST_CATEGORY_TITLE_KEY, categoryTitle)
             val fragment = EventListFragment()
             fragment.arguments = args
             return fragment

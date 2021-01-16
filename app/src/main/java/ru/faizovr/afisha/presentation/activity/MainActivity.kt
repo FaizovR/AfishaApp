@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.presentation.fragment.CategoryFragment
 
@@ -12,7 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_layout)
 
         if (savedInstanceState == null) {
             addFragment(CategoryFragment.newInstance())
@@ -22,7 +21,11 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                supportFragmentManager.popBackStack(null, POP_BACK_STACK_INCLUSIVE)
+                if (supportFragmentManager.backStackEntryCount == 0) {
+                    addFragment(CategoryFragment.newInstance())
+                } else {
+                    supportFragmentManager.popBackStack()
+                }
                 return true
             }
         }
@@ -32,15 +35,16 @@ class MainActivity : AppCompatActivity() {
     fun replaceFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.main_fragment_container, fragment)
+            .replace(R.id.fragment_container, fragment)
             .addToBackStack(fragment.tag)
             .commit()
     }
 
-    private fun addFragment(fragment: Fragment) {
+    fun addFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.main_fragment_container, fragment)
+            .add(R.id.fragment_container, fragment)
+            .addToBackStack(fragment.tag)
             .commit()
     }
 

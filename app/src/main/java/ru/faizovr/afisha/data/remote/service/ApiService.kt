@@ -2,8 +2,10 @@ package ru.faizovr.afisha.data.remote.service
 
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.faizovr.afisha.data.model.CategoryResponse
+import ru.faizovr.afisha.data.model.EventDetailInfoResponse
 import ru.faizovr.afisha.data.model.EventListInfoResponse
 
 interface ApiService {
@@ -22,6 +24,11 @@ interface ApiService {
         @Query("location") location: String,
         @Query("text_format") text_format: String = "text"
     ): Response<EventListInfoResponse>
+
+    @GET("events/{id}/?text_format=text")
+    suspend fun getEventInfo(
+        @Path("id") id: Long
+    ): Response<EventDetailInfoResponse>
 
     companion object {
         private const val API_VERSION = "v1.4"
