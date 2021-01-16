@@ -14,12 +14,12 @@ interface EventListContract {
         fun setEventListVisibility(isVisible: Boolean)
         fun setRetryButtonVisibility(isVisible: Boolean)
         fun setupDataToList(events: Flow<PagingData<EventShortInfo>>)
-
         fun showNewFragment(eventShortInfo: EventShortInfo)
         fun onRetryClicked()
     }
 
     interface Presenter {
+        fun init()
         fun onRetryButtonClicked()
         fun onLoadStateChanged(loadState: CombinedLoadStates)
         fun onEventClicked(eventShortInfo: EventShortInfo)

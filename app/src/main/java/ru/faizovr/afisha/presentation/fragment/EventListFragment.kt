@@ -24,7 +24,6 @@ import ru.faizovr.afisha.presentation.presenter.EventListPresenter
 
 class EventListFragment : Fragment(R.layout.fragment_event_list),
     EventListContract.View {
-
     private var onEventClicked: (eventShortInfo: EventShortInfo) -> Unit = { eventShortInfo ->
         presenter?.onEventClicked(eventShortInfo)
     }
@@ -80,6 +79,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         val categoryTag = arguments?.getString(EVENT_LIST_CATEGORY_TAG_KEY)
         if (categoryTag != null) {
             presenter = EventListPresenter(this, app.repository, categoryTag)
+            presenter?.init()
         }
     }
 

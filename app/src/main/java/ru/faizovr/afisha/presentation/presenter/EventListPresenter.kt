@@ -13,11 +13,12 @@ class EventListPresenter(
     private val categoryTag: String,
 ) : EventListContract.Presenter {
 
-    private var listData: Flow<PagingData<EventShortInfo>> = Pager(PagingConfig(pageSize = 20)) {
-        EventListDataSource(repository, categoryTag)
-    }.flow
+    private lateinit var listData: Flow<PagingData<EventShortInfo>>
 
-    init {
+    override fun init() {
+        listData = Pager(PagingConfig(pageSize = 20)) {
+            EventListDataSource(repository, categoryTag)
+        }.flow
         view.setupView()
         view.setupDataToList(listData)
     }
