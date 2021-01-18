@@ -20,8 +20,7 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
     private val viewModel: EventDetailViewModel by viewModels {
         val repository = (requireActivity().application as App).repository
-        val eventId = arguments?.getLong(EVENT_DETAIL_ID_KEY) ?: 1
-        EventDetailViewModelFactory(repository, eventId)
+        EventDetailViewModelFactory(repository, requireArguments())
     }
     private var binding: FragmentEventDetailBinding? = null
 
@@ -43,6 +42,14 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupObservers()
+    }
+
+    private fun setupToolbar() {
+        val title: String = arguments?.getString(EVENT_DETAIL_TITLE_KEY) ?: ""
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
+            true
+        )
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
 
     private fun setupObservers() {
@@ -80,67 +87,53 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
     }
 
     private fun defaultState() {
-        val receiver = binding
-        if (receiver != null) {
-            with(receiver) {
-                imageViewDetail.isVisible = true
-                textViewDate.isVisible = true
-                textViewDescription.isVisible = true
-                textViewPlace.isVisible = true
-                textViewTittleEvent.isVisible = true
-
-                textViewEventDetailFailedMessage.isVisible = false
-                buttonEventDetailRetry.isVisible = false
-
-                progressBarEventDetail.isVisible = false
-            }
-        }
-    }
-
-    private fun setupToolbar() {
-        val title: String = arguments?.getString(EVENT_DETAIL_TITLE_KEY) ?: ""
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = title
+        setEventVisible(true)
+        setProgressBarVisibility(false)
+        setErrorTextVisibility(false)
+        setRetryButtonVisibility(false)
     }
 
     private fun loadState() {
-        val binding1 = binding
-        if (binding1 != null) {
-            with(binding1) {
-                imageViewDetail.isVisible = false
-                textViewDate.isVisible = false
-                textViewDescription.isVisible = false
-                textViewPlace.isVisible = false
-                textViewTittleEvent.isVisible = false
-
-                textViewEventDetailFailedMessage.isVisible = false
-                buttonEventDetailRetry.isVisible = false
-
-                progressBarEventDetail.isVisible = true
-            }
-        }
+        setEventVisible(false)
+        setProgressBarVisibility(true)
+        setErrorTextVisibility(false)
+        setRetryButtonVisibility(false)
     }
 
     private fun errorState() {
-        val binding1 = binding
-        if (binding1 != null) {
-            with(binding1) {
-                imageViewDetail.isVisible = false
-                textViewDate.isVisible = false
-                textViewDescription.isVisible = false
-                textViewPlace.isVisible = false
-                textViewTittleEvent.isVisible = false
+        setEventVisible(false)
+        setProgressBarVisibility(false)
+        setErrorTextVisibility(true)
+        setRetryButtonVisibility(true)
+    }
 
-                textViewEventDetailFailedMessage.isVisible = true
-                buttonEventDetailRetry.isVisible = true
-
-                progressBarEventDetail.isVisible = false
+    private fun setEventVisible(isVisible: Boolean) {
+        val receiver = binding
+        if (receiver != null) {
+            with(receiver) {
+                imageViewDetail.isVisible = isVisible
+                textViewDate.isVisible = isVisible
+                textViewDescription.isVisible = isVisible
+                textViewPlace.isVisible = isVisible
+                textViewTittleEvent.isVisible = isVisible
             }
         }
     }
 
+    private fun setRetryButtonVisibility(isVisible: Boolean) {
+        binding?.buttonEventDetailRetry?.isVisible = isVisible
+    }
+
+    private fun setProgressBarVisibility(isVisible: Boolean) {
+        binding?.progressBarEventDetail?.isVisible = isVisible
+    }
+
+    private fun setErrorTextVisibility(isVisible: Boolean) {
+        binding?.textViewEventDetailFailedMessage?.isVisible = isVisible
+    }
+
     companion object {
-        private const val EVENT_DETAIL_ID_KEY = "ID"
+        const val EVENT_DETAIL_ID_KEY = "ID"
         private const val EVENT_DETAIL_TITLE_KEY = "TITLE"
         fun newInstance(eventId: Long, eventTitle: String): EventDetailFragment {
             val args = Bundle()

@@ -8,7 +8,7 @@ import ru.faizovr.afisha.presentation.model.EventDetailInfoDataView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EventDetailInfoMapper : EntityMapper<EventDetailInfo, EventDetailInfoDataView> {
+class EventDetailInfoDataViewMapper : EntityMapper<EventDetailInfo, EventDetailInfoDataView> {
     override fun mapFromEntity(entity: EventDetailInfo): EventDetailInfoDataView =
         EventDetailInfoDataView(
             tittle = entity.title,

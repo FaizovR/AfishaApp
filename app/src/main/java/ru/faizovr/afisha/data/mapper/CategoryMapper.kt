@@ -9,6 +9,6 @@ class CategoryMapper : EntityMapper<CategoryResponse, Category> {
         Category(
             id = entity.id,
             tag = entity.slug,
-            name = entity.name
+            categoryName = entity.name
         )
 }
