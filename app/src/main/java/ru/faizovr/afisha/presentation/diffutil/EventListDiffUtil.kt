@@ -1,17 +1,20 @@
 package ru.faizovr.afisha.presentation.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.faizovr.afisha.domain.model.EventShortInfo
+import ru.faizovr.afisha.presentation.model.EventListDataView
 
-class EventListDiffUtil : DiffUtil.ItemCallback<EventShortInfo>() {
-    override fun areItemsTheSame(oldItem: EventShortInfo, newItem: EventShortInfo): Boolean =
+class EventListDiffUtil : DiffUtil.ItemCallback<EventListDataView>() {
+    override fun areItemsTheSame(oldItem: EventListDataView, newItem: EventListDataView): Boolean =
         oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: EventShortInfo, newItem: EventShortInfo): Boolean =
+    override fun areContentsTheSame(
+        oldItem: EventListDataView,
+        newItem: EventListDataView
+    ): Boolean =
         when {
+            oldItem.date != newItem.date -> false
             oldItem.description != newItem.description -> false
-            oldItem.images != newItem.images -> false
-            oldItem.slug != newItem.slug -> false
+            oldItem.imageUrl != newItem.imageUrl -> false
             oldItem.title != newItem.title -> false
             else -> true
         }

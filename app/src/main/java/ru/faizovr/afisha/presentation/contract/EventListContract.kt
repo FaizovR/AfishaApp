@@ -3,7 +3,7 @@ package ru.faizovr.afisha.presentation.contract
 import androidx.paging.CombinedLoadStates
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import ru.faizovr.afisha.domain.model.EventShortInfo
+import ru.faizovr.afisha.presentation.model.EventListDataView
 
 interface EventListContract {
 
@@ -13,8 +13,8 @@ interface EventListContract {
         fun setProgressBarVisibility(isVisible: Boolean)
         fun setEventListVisibility(isVisible: Boolean)
         fun setRetryButtonVisibility(isVisible: Boolean)
-        fun setupDataToList(events: Flow<PagingData<EventShortInfo>>)
-        fun showNewFragment(eventShortInfo: EventShortInfo)
+        fun setupDataToList(events: Flow<PagingData<EventListDataView>>)
+        fun showNewFragment(eventListDataView: EventListDataView)
         fun onRetryClicked()
     }
 
@@ -22,6 +22,6 @@ interface EventListContract {
         fun init()
         fun onRetryButtonClicked()
         fun onLoadStateChanged(loadState: CombinedLoadStates)
-        fun onEventClicked(eventShortInfo: EventShortInfo)
+        fun onEventClicked(eventListDataView: EventListDataView)
     }
 }

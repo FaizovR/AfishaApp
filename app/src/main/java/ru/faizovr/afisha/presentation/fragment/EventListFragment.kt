@@ -15,18 +15,19 @@ import kotlinx.coroutines.launch
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.FragmentEventListBinding
-import ru.faizovr.afisha.domain.model.EventShortInfo
 import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.adapter.FooterAdapter
 import ru.faizovr.afisha.presentation.contract.EventListContract
+import ru.faizovr.afisha.presentation.model.EventListDataView
 import ru.faizovr.afisha.presentation.presenter.EventListPresenter
 
 class EventListFragment : Fragment(R.layout.fragment_event_list),
     EventListContract.View {
-    private var onEventClicked: (eventShortInfo: EventShortInfo) -> Unit = { eventShortInfo ->
-        presenter?.onEventClicked(eventShortInfo)
-    }
+    private var onEventClicked: (eventListDataView: EventListDataView) -> Unit =
+        { eventListDataView ->
+            presenter?.onEventClicked(eventListDataView)
+        }
     private var presenter: EventListContract.Presenter? = null
     private lateinit var binding: FragmentEventListBinding
     private var eventListAdapter: EventListAdapter? = null
@@ -104,7 +105,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     override fun setupDataToList(
-        events: Flow<PagingData<EventShortInfo>>
+        events: Flow<PagingData<EventListDataView>>
     ) {
         lifecycleScope.launch {
             val eventListAdapter1 = eventListAdapter
@@ -114,9 +115,9 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         }
     }
 
-    override fun showNewFragment(eventShortInfo: EventShortInfo) {
+    override fun showNewFragment(eventListDataView: EventListDataView) {
         val fragment: Fragment =
-            EventDetailFragment.newInstance(eventShortInfo.id, eventShortInfo.title)
+            EventDetailFragment.newInstance(eventListDataView.id, eventListDataView.title)
         (requireActivity() as MainActivity).replaceFragment(fragment)
     }
 
