@@ -12,24 +12,24 @@ class EventDetailMapper : EntityMapper<EventDetailInfoResponse, EventDetailInfo>
     override fun mapFromEntity(entity: EventDetailInfoResponse): EventDetailInfo {
         return EventDetailInfo(
             id = entity.id,
-            title = entity.title,
-            ageRestriction = entity.age_restriction,
-            fullDescription = entity.body_text,
-            categories = entity.categories,
-            commentsCount = entity.comments_count,
+            title = entity.title ?: "",
+            ageRestriction = entity.age_restriction ?: "",
+            fullDescription = entity.body_text ?: "",
+            categories = entity.categories ?: emptyList(),
+            commentsCount = entity.comments_count ?: 0,
             dates = mapDate(entity.dates),
-            shortDescription = entity.description,
-            isCommentsDisabled = entity.disable_comments,
-            favoritesCount = entity.favorites_count,
+            shortDescription = entity.description ?: "",
+            isCommentsDisabled = entity.disable_comments ?: true,
+            favoritesCount = entity.favorites_count ?: 0,
             images = mapImage(entity.images),
-            isFree = entity.is_free,
-            price = entity.price,
-            publicationDate = entity.publication_date,
-            shortTitle = entity.short_title,
-            siteUrl = entity.site_url,
-            slug = entity.slug,
-            tagLine = entity.tagline,
-            tags = entity.tags
+            isFree = entity.is_free ?: true,
+            price = entity.price ?: "",
+            publicationDate = entity.publication_date ?: 0,
+            shortTitle = entity.short_title ?: "",
+            siteUrl = entity.site_url ?: "",
+            slug = entity.slug ?: "",
+            tagLine = entity.tagLine ?: "",
+            tags = entity.tags ?: emptyList()
         )
     }
 

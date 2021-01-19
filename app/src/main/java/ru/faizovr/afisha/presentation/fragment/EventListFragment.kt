@@ -1,7 +1,6 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -109,7 +108,6 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     override fun setupDataToList(
         events: Flow<PagingData<EventListDataView>>
     ) {
-        Log.d(TAG, "setupDataToList: ")
         lifecycleScope.launch {
             val eventListAdapter1 = eventListAdapter
             if (eventListAdapter1 != null) {
@@ -119,14 +117,12 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     override fun showNewFragment(eventListDataView: EventListDataView) {
-        Log.d(TAG, "showNewFragment: ")
         val fragment: Fragment =
             EventDetailFragment.newInstance(eventListDataView.id, eventListDataView.title)
         (requireActivity() as MainActivity).replaceFragment(fragment)
     }
 
     companion object {
-        private const val TAG = "EventListFragment"
         private const val EVENT_LIST_CATEGORY_TAG_KEY = "Event_List_Category_tag"
         private const val EVENT_LIST_CATEGORY_TITLE_KEY = "Event_List_Category_Title"
         fun newInstance(categoryTag: String, categoryTitle: String): EventListFragment {
