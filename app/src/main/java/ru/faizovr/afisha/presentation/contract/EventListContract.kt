@@ -8,7 +8,6 @@ import ru.faizovr.afisha.presentation.model.EventListDataView
 interface EventListContract {
 
     interface View {
-        fun setupView()
         fun setErrorTextVisibility(isVisible: Boolean)
         fun setProgressBarVisibility(isVisible: Boolean)
         fun setEventListVisibility(isVisible: Boolean)

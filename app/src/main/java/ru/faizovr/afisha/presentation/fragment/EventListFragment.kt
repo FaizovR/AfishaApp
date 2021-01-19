@@ -1,14 +1,15 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
 import androidx.paging.PagingData
+import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,21 +30,19 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
             presenter?.onEventClicked(eventListDataView)
         }
     private var presenter: EventListContract.Presenter? = null
-    private lateinit var binding: FragmentEventListBinding
+    private val binding by viewBinding(FragmentEventListBinding::bind)
     private var eventListAdapter: EventListAdapter? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentEventListBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    private val loadStateListener: (CombinedLoadStates) -> Unit =
+        { loadState: CombinedLoadStates ->
+            presenter?.onLoadStateChanged(
+                loadState
+            )
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+        setupView()
         setupList()
         setupPresenter()
     }
@@ -54,7 +53,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
 
-    override fun setupView() {
+    private fun setupView() {
         binding.buttonEventListRetry.setOnClickListener {
             presenter?.onRetryButtonClicked()
         }
@@ -62,17 +61,20 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
 
     private fun setupList() {
         eventListAdapter = EventListAdapter(onEventClicked)
-        eventListAdapter?.addLoadStateListener { loadState ->
-            presenter?.onLoadStateChanged(
-                loadState
-            )
+        with(binding) {
+            recyclerViewEventList.apply {
+                setHasFixedSize(true)
+                adapter = eventListAdapter?.withLoadStateFooter(
+                    footer = FooterAdapter { eventListAdapter?.retry() }
+                )
+            }
         }
-        binding.recyclerViewEventList.apply {
-            setHasFixedSize(true)
-            adapter = eventListAdapter?.withLoadStateFooter(
-                footer = FooterAdapter { eventListAdapter?.retry() }
-            )
-        }
+        eventListAdapter?.addLoadStateListener(loadStateListener)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        eventListAdapter?.removeLoadStateListener(loadStateListener)
     }
 
     private fun setupPresenter() {
@@ -107,6 +109,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     override fun setupDataToList(
         events: Flow<PagingData<EventListDataView>>
     ) {
+        Log.d(TAG, "setupDataToList: ")
         lifecycleScope.launch {
             val eventListAdapter1 = eventListAdapter
             if (eventListAdapter1 != null) {
@@ -116,12 +119,14 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
     }
 
     override fun showNewFragment(eventListDataView: EventListDataView) {
+        Log.d(TAG, "showNewFragment: ")
         val fragment: Fragment =
             EventDetailFragment.newInstance(eventListDataView.id, eventListDataView.title)
         (requireActivity() as MainActivity).replaceFragment(fragment)
     }
 
     companion object {
+        private const val TAG = "EventListFragment"
         private const val EVENT_LIST_CATEGORY_TAG_KEY = "Event_List_Category_tag"
         private const val EVENT_LIST_CATEGORY_TITLE_KEY = "Event_List_Category_Title"
         fun newInstance(categoryTag: String, categoryTitle: String): EventListFragment {

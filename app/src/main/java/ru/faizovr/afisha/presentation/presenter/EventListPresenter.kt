@@ -23,7 +23,6 @@ class EventListPresenter(
         listData = Pager(PagingConfig(pageSize = 20)) {
             EventListDataSource(repository, categoryTag)
         }.flow
-        view.setupView()
         val events = listData.map { pagingData ->
             pagingData.map {
                 eventListDataViewMapper.mapFromEntity(it)

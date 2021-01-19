@@ -1,13 +1,12 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.FragmentCategoryListBinding
@@ -24,20 +23,10 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
         val repository = (requireActivity().application as App).repository
         CategoryListViewModelFactory(repository)
     }
-
-    private var binding: FragmentCategoryListBinding? = null
+    private val binding by viewBinding(FragmentCategoryListBinding::bind)
     private var categoriesListAdapter: CategoryAdapter? = null
     private val onMenuClicked: (categoryDataView: CategoryDataView) -> Unit = {
         showNewFragment(it)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentCategoryListBinding.inflate(inflater, container, false)
-        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -99,8 +88,8 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
 
     private fun setupView() {
         categoriesListAdapter = CategoryAdapter(onMenuClicked)
-        binding?.recyclerViewCategory?.adapter = categoriesListAdapter
-        binding?.buttonMenuRetry?.setOnClickListener {
+        binding.recyclerViewCategory.adapter = categoriesListAdapter
+        binding.buttonMenuRetry.setOnClickListener {
             viewModel.onRetryClicked()
         }
     }
@@ -112,19 +101,19 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
     }
 
     private fun setRetryButtonVisibility(isVisible: Boolean) {
-        binding?.buttonMenuRetry?.isVisible = isVisible
+        binding.buttonMenuRetry.isVisible = isVisible
     }
 
     private fun setCategoryListVisibility(isVisible: Boolean) {
-        binding?.recyclerViewCategory?.isVisible = isVisible
+        binding.recyclerViewCategory.isVisible = isVisible
     }
 
     private fun setErrorTextVisibility(isVisible: Boolean) {
-        binding?.textViewCategoryFailedMessage?.isVisible = isVisible
+        binding.textViewCategoryFailedMessage.isVisible = isVisible
     }
 
     private fun setProgressBarVisibility(isVisible: Boolean) {
-        binding?.progressBarCategory?.isVisible = isVisible
+        binding.progressBarCategory.isVisible = isVisible
     }
 
     companion object {
