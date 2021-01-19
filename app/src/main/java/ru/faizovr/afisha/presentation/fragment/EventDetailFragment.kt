@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.FragmentEventDetailBinding
-import ru.faizovr.afisha.presentation.ScreenState
 import ru.faizovr.afisha.presentation.viewmodel.EventDetailViewModel
 import ru.faizovr.afisha.presentation.viewmodel.EventDetailViewModelFactory
 
@@ -27,33 +26,38 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupObservers()
+        setupView()
+    }
+
+    private fun setupView() {
+        binding.buttonEventDetailRetry.setOnClickListener {
+            viewModel.onRetryClicked()
+        }
     }
 
     private fun setupToolbar() {
         val title: String = arguments?.getString(EVENT_DETAIL_TITLE_KEY) ?: ""
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
-            true
-        )
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
 
     private fun setupObservers() {
-        viewModel.screenState.observe(viewLifecycleOwner) {
-            when (it) {
-                ScreenState.Default -> {
-                    defaultState()
-                }
-                ScreenState.Loading -> {
-                    loadState()
-                }
-                ScreenState.Error -> {
-                    errorState()
-                }
-                null -> {
-                    errorState()
-                }
-            }
-        }
+        viewModel.buttonRetryVisibility.observe(
+            viewLifecycleOwner,
+            this@EventDetailFragment::setRetryButtonVisibility
+        )
+        viewModel.eventDetailVisibility.observe(
+            viewLifecycleOwner,
+            this@EventDetailFragment::setEventVisible
+        )
+        viewModel.errorTextVisibility.observe(
+            viewLifecycleOwner,
+            this@EventDetailFragment::setErrorTextVisibility
+        )
+        viewModel.progressBarVisibility.observe(
+            viewLifecycleOwner,
+            this@EventDetailFragment::setProgressBarVisibility
+        )
         viewModel.eventDetailInfoView.observe(viewLifecycleOwner) {
             with(binding) {
                 Glide.with(this@EventDetailFragment)
@@ -66,27 +70,6 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                 textViewDescription.text = it.description
             }
         }
-    }
-
-    private fun defaultState() {
-        setEventVisible(true)
-        setProgressBarVisibility(false)
-        setErrorTextVisibility(false)
-        setRetryButtonVisibility(false)
-    }
-
-    private fun loadState() {
-        setEventVisible(false)
-        setProgressBarVisibility(true)
-        setErrorTextVisibility(false)
-        setRetryButtonVisibility(false)
-    }
-
-    private fun errorState() {
-        setEventVisible(false)
-        setProgressBarVisibility(false)
-        setErrorTextVisibility(true)
-        setRetryButtonVisibility(true)
     }
 
     private fun setEventVisible(isVisible: Boolean) {

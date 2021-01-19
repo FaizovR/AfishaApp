@@ -10,7 +10,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.FragmentCategoryListBinding
-import ru.faizovr.afisha.presentation.ScreenState
 import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.CategoryAdapter
 import ru.faizovr.afisha.presentation.model.CategoryDataView
@@ -38,46 +37,25 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
     }
 
     private fun setupObservers() {
-        viewModel.screenState.observe(viewLifecycleOwner) {
-            when (it) {
-                ScreenState.Default -> {
-                    defaultState()
-                }
-                ScreenState.Loading -> {
-                    loadState()
-                }
-                ScreenState.Error -> {
-                    errorState()
-                }
-                null -> {
-                    errorState()
-                }
-            }
-        }
+        viewModel.buttonRetryVisibility.observe(
+            viewLifecycleOwner,
+            this@CategoryListFragment::setRetryButtonVisibility
+        )
+        viewModel.categoriesListVisibility.observe(
+            viewLifecycleOwner,
+            this@CategoryListFragment::setCategoryListVisibility
+        )
+        viewModel.errorTextVisibility.observe(
+            viewLifecycleOwner,
+            this@CategoryListFragment::setErrorTextVisibility
+        )
+        viewModel.progressBarVisibility.observe(
+            viewLifecycleOwner,
+            this@CategoryListFragment::setProgressBarVisibility
+        )
         viewModel.categoriesDataViewList.observe(viewLifecycleOwner) {
             categoriesListAdapter?.updateList(it)
         }
-    }
-
-    private fun defaultState() {
-        setCategoryListVisibility(true)
-        setProgressBarVisibility(false)
-        setErrorTextVisibility(false)
-        setRetryButtonVisibility(false)
-    }
-
-    private fun loadState() {
-        setCategoryListVisibility(false)
-        setProgressBarVisibility(true)
-        setErrorTextVisibility(false)
-        setRetryButtonVisibility(false)
-    }
-
-    private fun errorState() {
-        setCategoryListVisibility(false)
-        setProgressBarVisibility(false)
-        setErrorTextVisibility(true)
-        setRetryButtonVisibility(true)
     }
 
     private fun setupToolbar() {
