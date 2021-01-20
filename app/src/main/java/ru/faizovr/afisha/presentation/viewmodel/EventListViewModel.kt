@@ -33,7 +33,7 @@ class EventListViewModel(
         }
         .cachedIn(viewModelScope)
 
-    private val categoryTag: String = bundle.getString("Category_Tag", "")
+    private val categoryTag: String = bundle.getString("Event_List_Category_tag", "")
 
     private val _eventListVisibility = MutableLiveData<Boolean>()
     val eventListVisibility: LiveData<Boolean> = _eventListVisibility
