@@ -5,11 +5,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
-import androidx.paging.PagingData
 import by.kirich1409.viewbindingdelegate.viewBinding
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.faizovr.afisha.App
@@ -18,22 +17,25 @@ import ru.faizovr.afisha.databinding.FragmentEventListBinding
 import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.adapter.FooterAdapter
-import ru.faizovr.afisha.presentation.contract.EventListContract
 import ru.faizovr.afisha.presentation.model.EventListDataView
-import ru.faizovr.afisha.presentation.presenter.EventListPresenter
+import ru.faizovr.afisha.presentation.viewmodel.EventListViewModel
+import ru.faizovr.afisha.presentation.viewmodel.EventListViewModelFactory
 
-class EventListFragment : Fragment(R.layout.fragment_event_list),
-    EventListContract.View {
+class EventListFragment : Fragment(R.layout.fragment_event_list) {
     private var onEventClicked: (eventListDataView: EventListDataView) -> Unit =
         { eventListDataView ->
-            presenter?.onEventClicked(eventListDataView)
+            showNewFragment(eventListDataView)
         }
-    private var presenter: EventListContract.Presenter? = null
+
+    private val viewModel: EventListViewModel by viewModels {
+        val repository = (requireActivity().application as App).repository
+        EventListViewModelFactory(repository, requireArguments())
+    }
     private val binding by viewBinding(FragmentEventListBinding::bind)
     private var eventListAdapter: EventListAdapter? = null
     private val loadStateListener: (CombinedLoadStates) -> Unit =
         { loadState: CombinedLoadStates ->
-            presenter?.onLoadStateChanged(
+            viewModel.onLoadStateChanged(
                 loadState
             )
         }
@@ -43,7 +45,32 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         setupToolbar()
         setupView()
         setupList()
-        setupPresenter()
+        setupObservers()
+    }
+
+    private fun setupObservers() {
+        viewModel.buttonRetryVisibility.observe(
+            viewLifecycleOwner,
+            this@EventListFragment::setRetryButtonVisibility
+        )
+        viewModel.eventListVisibility.observe(
+            viewLifecycleOwner,
+            this@EventListFragment::setEventListVisibility
+        )
+        viewModel.errorTextVisibility.observe(
+            viewLifecycleOwner,
+            this@EventListFragment::setErrorTextVisibility
+        )
+        viewModel.progressBarVisibility.observe(
+            viewLifecycleOwner,
+            this@EventListFragment::setProgressBarVisibility
+        )
+        lifecycleScope.launch {
+            val eventListAdapter1 = eventListAdapter
+            if (eventListAdapter1 != null) {
+                viewModel.listData.collectLatest(eventListAdapter1::submitData)
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -52,9 +79,11 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
 
+    // Как обрабатывать события?
+
     private fun setupView() {
         binding.buttonEventListRetry.setOnClickListener {
-            presenter?.onRetryButtonClicked()
+            eventListAdapter?.retry()
         }
     }
 
@@ -76,47 +105,23 @@ class EventListFragment : Fragment(R.layout.fragment_event_list),
         eventListAdapter?.removeLoadStateListener(loadStateListener)
     }
 
-    private fun setupPresenter() {
-        val app: App = requireActivity().application as App
-        val categoryTag = arguments?.getString(EVENT_LIST_CATEGORY_TAG_KEY)
-        if (categoryTag != null) {
-            presenter = EventListPresenter(this, app.repository, categoryTag)
-            presenter?.init()
-        }
-    }
-
-    override fun setRetryButtonVisibility(isVisible: Boolean) {
+    private fun setRetryButtonVisibility(isVisible: Boolean) {
         binding.buttonEventListRetry.isVisible = isVisible
     }
 
-    override fun setErrorTextVisibility(isVisible: Boolean) {
+    private fun setErrorTextVisibility(isVisible: Boolean) {
         binding.textViewEventListFailedMessage.isVisible = isVisible
     }
 
-    override fun setProgressBarVisibility(isVisible: Boolean) {
+    private fun setProgressBarVisibility(isVisible: Boolean) {
         binding.progressBarEventList.isVisible = isVisible
     }
 
-    override fun setEventListVisibility(isVisible: Boolean) {
+    private fun setEventListVisibility(isVisible: Boolean) {
         binding.recyclerViewEventList.isVisible = isVisible
     }
 
-    override fun onRetryClicked() {
-        eventListAdapter?.retry()
-    }
-
-    override fun setupDataToList(
-        events: Flow<PagingData<EventListDataView>>
-    ) {
-        lifecycleScope.launch {
-            val eventListAdapter1 = eventListAdapter
-            if (eventListAdapter1 != null) {
-                events.collectLatest(eventListAdapter1::submitData)
-            }
-        }
-    }
-
-    override fun showNewFragment(eventListDataView: EventListDataView) {
+    private fun showNewFragment(eventListDataView: EventListDataView) {
         val fragment: Fragment =
             EventDetailFragment.newInstance(eventListDataView.id, eventListDataView.title)
         (requireActivity() as MainActivity).replaceFragment(fragment)

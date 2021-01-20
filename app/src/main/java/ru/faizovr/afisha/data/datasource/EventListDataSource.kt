@@ -15,7 +15,8 @@ class EventListDataSource(
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, EventShortInfo> {
         val currentLoadingPageKey = params.key ?: "1"
-        val result = repository.getEventList(currentLoadingPageKey, categoryTag)
+        val result: Result<EventListInfo>
+        result = repository.getEventList(currentLoadingPageKey, categoryTag)
         return when (result) {
             is Result.Success -> {
                 val eventList: EventListInfo = result.value
