@@ -1,23 +1,22 @@
 package ru.faizovr.afisha.presentation.viewmodel
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.faizovr.afisha.data.datasource.EventListDataSource
 import ru.faizovr.afisha.data.repository.Repository
+import ru.faizovr.afisha.presentation.base.BaseViewModel
 import ru.faizovr.afisha.presentation.mapper.EventListDataViewMapper
 import ru.faizovr.afisha.presentation.model.EventListDataView
 
 class EventListViewModel(
     private val repository: Repository,
-    bundle: Bundle,
+    private val categoryTag: String,
     private val eventListDataViewMapper: EventListDataViewMapper = EventListDataViewMapper()
-) : ViewModel() {
+) : BaseViewModel() {
 
     var listData: Flow<PagingData<EventListDataView>>
 
@@ -33,57 +32,40 @@ class EventListViewModel(
         }
         .cachedIn(viewModelScope)
 
-    private val categoryTag: String = bundle.getString("Event_List_Category_tag", "")
-
     private val _eventListVisibility = MutableLiveData<Boolean>()
     val eventListVisibility: LiveData<Boolean> = _eventListVisibility
 
-    private val _buttonRetryVisibility = MutableLiveData<Boolean>()
-    val buttonRetryVisibility: LiveData<Boolean> = _buttonRetryVisibility
-
-    private val _errorTextVisibility = MutableLiveData<Boolean>()
-    val errorTextVisibility: LiveData<Boolean> = _errorTextVisibility
-
-    private val _progressBarVisibility = MutableLiveData<Boolean>()
-    val progressBarVisibility: LiveData<Boolean> = _progressBarVisibility
-
     init {
-        loadingState()
+        setLoadingState()
         listData = flow
     }
 
     fun onLoadStateChanged(loadState: CombinedLoadStates) {
         when (loadState.refresh) {
             is LoadState.Loading -> {
-                loadingState()
+                setLoadingState()
             }
             is LoadState.Error -> {
-                errorState()
+                setErrorState()
             }
             else -> {
-                defaultState()
+                setDefaultState()
             }
         }
     }
 
-    private fun defaultState() {
+    override fun setDefaultState() {
+        super.setDefaultState()
         _eventListVisibility.value = true
-        _progressBarVisibility.value = false
-        _buttonRetryVisibility.value = false
-        _errorTextVisibility.value = false
     }
 
-    private fun loadingState() {
+    override fun setLoadingState() {
+        super.setLoadingState()
         _eventListVisibility.value = false
-        _progressBarVisibility.value = true
-        _buttonRetryVisibility.value = false
-        _errorTextVisibility.value = false
     }
 
-    private fun errorState() {
+    override fun setErrorState() {
+        super.setErrorState()
         _eventListVisibility.value = false
-        _progressBarVisibility.value = false
-        _buttonRetryVisibility.value = true
-        _errorTextVisibility.value = true
     }
 }

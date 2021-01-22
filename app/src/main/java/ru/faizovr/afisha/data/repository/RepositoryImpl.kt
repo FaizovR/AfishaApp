@@ -35,11 +35,11 @@ class RepositoryImpl(
             safeApiCall(
                 {
                     apiService.getEvents(
-                        LIST_FIELDS_TO_RETRIEVE,
+                        FIELDS_TO_RETRIEVE,
                         categoryTag,
                         PAGE_SIZE,
                         page,
-                        ORDER_PUBLICATION_DATE,
+                        ORDER_TYPE,
                         Date().currentTimeInMilliseconds(),
                         LOCATION
                     )
@@ -55,7 +55,7 @@ class RepositoryImpl(
     override suspend fun getEventDetail(eventId: Long): Result<EventDetailInfo> {
         val result: Result<EventDetailInfoResponse> =
             safeApiCall(
-                { apiService.getEventInfo(eventId) }, "Error"
+                { apiService.getEventInfo(eventId, FIELDS_TO_EXPAND) }, "Error"
             )
         return if (result is Result.Success) {
             Result.Success(mapResult(result.value, eventDetailMapper::mapFromEntity))
@@ -66,9 +66,10 @@ class RepositoryImpl(
     }
 
     companion object {
-        private const val LIST_FIELDS_TO_RETRIEVE = "id,dates,title,place,price,description,images"
+        private const val FIELDS_TO_EXPAND = "place"
+        private const val FIELDS_TO_RETRIEVE = "id,dates,title,place,price,description,images"
         private const val LOCATION = "msk"
         private const val PAGE_SIZE = 20
-        private const val ORDER_PUBLICATION_DATE = "publication_date"
+        private const val ORDER_TYPE = "publication_date"
     }
 }

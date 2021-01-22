@@ -18,8 +18,9 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
     private val viewModel: EventDetailViewModel by viewModels {
         val repository = (requireActivity().application as App).repository
-        EventDetailViewModelFactory(repository, requireArguments())
+        EventDetailViewModelFactory(repository, eventId)
     }
+    private val eventId: Long by lazy { requireArguments().getLong(EVENT_DETAIL_ID_KEY) }
     private val binding by viewBinding(FragmentEventDetailBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

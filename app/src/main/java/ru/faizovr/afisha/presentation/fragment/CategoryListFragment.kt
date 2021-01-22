@@ -1,6 +1,7 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -73,6 +74,7 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
     }
 
     private fun showNewFragment(categoryDataView: CategoryDataView) {
+        Log.d("TAG", "showNewFragment: ${categoryDataView.tag} ${categoryDataView.name} ")
         val fragment: Fragment =
             EventListFragment.newInstance(categoryDataView.tag, categoryDataView.name)
         (requireActivity() as MainActivity).replaceFragment(fragment)

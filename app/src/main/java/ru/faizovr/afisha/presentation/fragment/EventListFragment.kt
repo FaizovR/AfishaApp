@@ -1,6 +1,7 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -22,15 +23,24 @@ import ru.faizovr.afisha.presentation.viewmodel.EventListViewModel
 import ru.faizovr.afisha.presentation.viewmodel.EventListViewModelFactory
 
 class EventListFragment : Fragment(R.layout.fragment_event_list) {
+
     private var onEventClicked: (eventListDataView: EventListDataView) -> Unit =
         { eventListDataView ->
             showNewFragment(eventListDataView)
         }
 
+    private val categoryTag: String by lazy {
+        requireArguments().getString(
+            EVENT_LIST_CATEGORY_TAG_KEY,
+            ""
+        )
+    }
+
     private val viewModel: EventListViewModel by viewModels {
         val repository = (requireActivity().application as App).repository
-        EventListViewModelFactory(repository, requireArguments())
+        EventListViewModelFactory(repository, categoryTag)
     }
+
     private val binding by viewBinding(FragmentEventListBinding::bind)
     private var eventListAdapter: EventListAdapter? = null
     private val loadStateListener: (CombinedLoadStates) -> Unit =
@@ -78,8 +88,6 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
     }
-
-    // Как обрабатывать события?
 
     private fun setupView() {
         binding.buttonEventListRetry.setOnClickListener {
@@ -134,6 +142,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
             val args = Bundle()
             args.putString(EVENT_LIST_CATEGORY_TAG_KEY, categoryTag)
             args.putString(EVENT_LIST_CATEGORY_TITLE_KEY, categoryTitle)
+            Log.d("TAG", "newInstance: $categoryTag $categoryTitle ")
             val fragment = EventListFragment()
             fragment.arguments = args
             return fragment

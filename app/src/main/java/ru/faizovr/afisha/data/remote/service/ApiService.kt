@@ -27,7 +27,8 @@ interface ApiService {
 
     @GET("events/{id}/?text_format=text")
     suspend fun getEventInfo(
-        @Path("id") id: Long
+        @Path("id") id: Long,
+        @Query("expand") fieldsToExpand: String
     ): Response<EventDetailInfoResponse>
 
     companion object {
