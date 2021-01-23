@@ -30,9 +30,4 @@ interface ApiService {
         @Path("id") id: Long,
         @Query("expand") fieldsToExpand: String
     ): Response<EventDetailInfoResponse>
-
-    companion object {
-        private const val API_VERSION = "v1.4"
-        const val API_BASE_URL = "https://kudago.com/public-api/$API_VERSION/"
-    }
 }
