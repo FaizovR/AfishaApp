@@ -8,23 +8,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.faizovr.afisha.data.repository.Repository
+import ru.faizovr.afisha.data.wrapper.Result
 import ru.faizovr.afisha.domain.model.EventDetailInfo
 import ru.faizovr.afisha.presentation.base.BaseViewModel
+import ru.faizovr.afisha.presentation.commands.EventDetailCommands
 import ru.faizovr.afisha.presentation.mapper.EventDetailInfoDataViewMapper
 import ru.faizovr.afisha.presentation.model.EventDetailInfoDataView
 
 class EventDetailViewModel(
     private val repository: Repository,
     private val eventId: Long,
-    private val eventDetailInfoDataViewMapper: EventDetailInfoDataViewMapper = EventDetailInfoDataViewMapper()
-) : BaseViewModel() {
+    private val eventDetailInfoDataViewMapper: EventDetailInfoDataViewMapper = EventDetailInfoDataViewMapper(),
+) : BaseViewModel<EventDetailCommands>() {
 
     private val _eventDetailInfo = MutableLiveData<EventDetailInfoDataView>()
     val eventDetailInfoView: LiveData<EventDetailInfoDataView> = _eventDetailInfo
 
     private val _eventDetailInfoVisibility = MutableLiveData<Boolean>()
     val eventDetailVisibility: LiveData<Boolean> = _eventDetailInfoVisibility
-
 
     init {
         fetchInfo()
@@ -35,18 +36,25 @@ class EventDetailViewModel(
         viewModelScope.launch {
             val result = repository.getEventDetail(eventId)
             withContext(Dispatchers.Main) {
-                if (result is ru.faizovr.afisha.data.wrapper.Result.Success) {
-                    refreshEventDetailData(result.value)
-                    setDefaultState()
-                } else {
-                    setErrorState()
-                    Log.e(
-                        "TAG",
-                        "fetchInfo: ${(result as ru.faizovr.afisha.data.wrapper.Result.Error).exception.localizedMessage} ${
-                            result.exception.stackTrace
-                        }"
-                    )
-                }
+                prepareResult(result)
+            }
+        }
+    }
+
+    private fun prepareResult(result: Result<EventDetailInfo>) {
+        when (result) {
+            is Result.Success -> {
+                refreshEventDetailData(result.value)
+                setDefaultState()
+            }
+            is Result.Error -> {
+                setErrorState()
+                Log.e(
+                    "TAG",
+                    "fetchInfo: ${result.exception.localizedMessage} ${
+                        result.exception.stackTrace
+                    }"
+                )
             }
         }
     }

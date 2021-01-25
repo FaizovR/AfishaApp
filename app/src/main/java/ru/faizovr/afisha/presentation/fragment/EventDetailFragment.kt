@@ -38,8 +38,10 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
     private fun setupToolbar() {
         val title: String = arguments?.getString(EVENT_DETAIL_TITLE_KEY) ?: ""
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = title
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            this.title = title
+        }
     }
 
     private fun setupObservers() {

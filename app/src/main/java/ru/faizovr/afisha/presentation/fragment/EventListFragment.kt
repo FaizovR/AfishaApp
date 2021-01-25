@@ -18,6 +18,7 @@ import ru.faizovr.afisha.databinding.FragmentEventListBinding
 import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.adapter.FooterAdapter
+import ru.faizovr.afisha.presentation.commands.EventListCommands
 import ru.faizovr.afisha.presentation.model.EventListDataView
 import ru.faizovr.afisha.presentation.viewmodel.EventListViewModel
 import ru.faizovr.afisha.presentation.viewmodel.EventListViewModelFactory
@@ -26,7 +27,7 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
 
     private var onEventClicked: (eventListDataView: EventListDataView) -> Unit =
         { eventListDataView ->
-            showNewFragment(eventListDataView)
+            viewModel.onEventListItemClicked(eventListDataView)
         }
 
     private val categoryTag: String by lazy {
@@ -58,7 +59,21 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
         setupObservers()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        eventListAdapter?.removeLoadStateListener(loadStateListener)
+    }
+
+    private fun executeCommand(command: EventListCommands) {
+        when (command) {
+            is EventListCommands.OpenEventDetail -> {
+                showNewFragment(command.eventListDataView)
+            }
+        }
+    }
+
     private fun setupObservers() {
+        viewModel.commandsEvent.observe(viewLifecycleOwner, this::executeCommand)
         viewModel.buttonRetryVisibility.observe(
             viewLifecycleOwner,
             this@EventListFragment::setRetryButtonVisibility
@@ -106,11 +121,6 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
             }
         }
         eventListAdapter?.addLoadStateListener(loadStateListener)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        eventListAdapter?.removeLoadStateListener(loadStateListener)
     }
 
     private fun setRetryButtonVisibility(isVisible: Boolean) {

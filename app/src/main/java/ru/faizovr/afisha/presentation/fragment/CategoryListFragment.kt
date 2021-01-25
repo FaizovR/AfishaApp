@@ -1,7 +1,6 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -13,6 +12,7 @@ import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.FragmentCategoryListBinding
 import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.CategoryAdapter
+import ru.faizovr.afisha.presentation.commands.CategoriesCommands
 import ru.faizovr.afisha.presentation.model.CategoryDataView
 import ru.faizovr.afisha.presentation.viewmodel.CategoryListViewModel
 import ru.faizovr.afisha.presentation.viewmodel.CategoryListViewModelFactory
@@ -26,18 +26,26 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
     private val binding by viewBinding(FragmentCategoryListBinding::bind)
     private var categoriesListAdapter: CategoryAdapter? = null
     private val onMenuClicked: (categoryDataView: CategoryDataView) -> Unit = {
-        showNewFragment(it)
+        viewModel.onCategoriesListItemClicked(it)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupToolbar()
         setupView()
         setupObservers()
     }
 
+    private fun executeCommand(command: CategoriesCommands) {
+        when (command) {
+            is CategoriesCommands.OpenEventList -> {
+                showNewFragment(command.categoryDataView)
+            }
+        }
+    }
+
     private fun setupObservers() {
+        viewModel.commandsEvent.observe(viewLifecycleOwner, this::executeCommand)
         viewModel.buttonRetryVisibility.observe(
             viewLifecycleOwner,
             this@CategoryListFragment::setRetryButtonVisibility
@@ -60,9 +68,10 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
     }
 
     private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title =
-            getString(R.string.category_title)
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            title = getString(R.string.category_title)
+        }
     }
 
     private fun setupView() {
@@ -74,7 +83,6 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list) {
     }
 
     private fun showNewFragment(categoryDataView: CategoryDataView) {
-        Log.d("TAG", "showNewFragment: ${categoryDataView.tag} ${categoryDataView.name} ")
         val fragment: Fragment =
             EventListFragment.newInstance(categoryDataView.tag, categoryDataView.name)
         (requireActivity() as MainActivity).replaceFragment(fragment)

@@ -9,14 +9,15 @@ import kotlinx.coroutines.flow.map
 import ru.faizovr.afisha.data.datasource.EventListDataSource
 import ru.faizovr.afisha.data.repository.Repository
 import ru.faizovr.afisha.presentation.base.BaseViewModel
+import ru.faizovr.afisha.presentation.commands.EventListCommands
 import ru.faizovr.afisha.presentation.mapper.EventListDataViewMapper
 import ru.faizovr.afisha.presentation.model.EventListDataView
 
 class EventListViewModel(
     private val repository: Repository,
     private val categoryTag: String,
-    private val eventListDataViewMapper: EventListDataViewMapper = EventListDataViewMapper()
-) : BaseViewModel() {
+    private val eventListDataViewMapper: EventListDataViewMapper = EventListDataViewMapper(),
+) : BaseViewModel<EventListCommands>() {
 
     var listData: Flow<PagingData<EventListDataView>>
 
@@ -38,6 +39,11 @@ class EventListViewModel(
     init {
         setLoadingState()
         listData = flow
+    }
+
+    fun onEventListItemClicked(eventListDataView: EventListDataView) {
+        val command = EventListCommands.OpenEventDetail(eventListDataView)
+        executeCommand(command)
     }
 
     fun onLoadStateChanged(loadState: CombinedLoadStates) {

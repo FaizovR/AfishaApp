@@ -3,8 +3,9 @@ package ru.faizovr.afisha.presentation.base
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.faizovr.afisha.presentation.singleEvent.SingleEventLiveData
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel<CommandType : BaseCommand> : ViewModel() {
 
     private val _buttonRetryVisibility = MutableLiveData<Boolean>()
     val buttonRetryVisibility: LiveData<Boolean> = _buttonRetryVisibility
@@ -14,6 +15,13 @@ abstract class BaseViewModel : ViewModel() {
 
     private val _progressBarVisibility = MutableLiveData<Boolean>()
     val progressBarVisibility: LiveData<Boolean> = _progressBarVisibility
+
+    private val _commandsEvent: MutableLiveData<CommandType> = SingleEventLiveData()
+    val commandsEvent: LiveData<CommandType> = _commandsEvent
+
+    protected fun executeCommand(command: CommandType) {
+        _commandsEvent.value = command
+    }
 
     protected open fun setDefaultState() {
         _progressBarVisibility.value = false

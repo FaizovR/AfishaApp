@@ -11,13 +11,14 @@ import ru.faizovr.afisha.data.repository.Repository
 import ru.faizovr.afisha.data.wrapper.Result
 import ru.faizovr.afisha.domain.model.Category
 import ru.faizovr.afisha.presentation.base.BaseViewModel
+import ru.faizovr.afisha.presentation.commands.CategoriesCommands
 import ru.faizovr.afisha.presentation.mapper.CategoryDataViewMapper
 import ru.faizovr.afisha.presentation.model.CategoryDataView
 
 class CategoryListViewModel(
     private val repository: Repository,
-    private val categoryMapper: CategoryDataViewMapper = CategoryDataViewMapper()
-) : BaseViewModel() {
+    private val categoryMapper: CategoryDataViewMapper = CategoryDataViewMapper(),
+) : BaseViewModel<CategoriesCommands>() {
 
     private val categoriesList: MutableList<Category> = mutableListOf()
 
@@ -36,20 +37,37 @@ class CategoryListViewModel(
         viewModelScope.launch {
             val result = repository.getCategoriesList()
             withContext(Dispatchers.Main) {
-                if (result is Result.Success) {
-                    refreshCategoriesList(result.value)
-                    refreshCategoriesDataViewList()
-                    setDefaultState()
-                } else {
-                    Log.e("TAG", "loadCategoryList: ${(result as Result.Error).exception}")
-                    setErrorState()
-                }
+                prepareResult(result)
+            }
+        }
+    }
+
+    private fun prepareResult(result: Result<List<Category>>) {
+        when (result) {
+            is Result.Success -> {
+                refreshCategoriesList(result.value)
+                refreshCategoriesDataViewList()
+                setDefaultState()
+            }
+            is Result.Error -> {
+                setErrorState()
+                Log.e(
+                    "TAG",
+                    "fetchInfo: ${result.exception.localizedMessage} ${
+                        result.exception.stackTrace
+                    }"
+                )
             }
         }
     }
 
     fun onRetryClicked() {
         fetchInfo()
+    }
+
+    fun onCategoriesListItemClicked(categoryDataView: CategoryDataView) {
+        val command = CategoriesCommands.OpenEventList(categoryDataView)
+        executeCommand(command)
     }
 
     private fun refreshCategoriesList(list: List<Category>) {
