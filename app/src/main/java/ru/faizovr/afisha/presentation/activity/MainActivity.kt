@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun addFragment(fragment: Fragment) {
+    private fun addFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, fragment)
