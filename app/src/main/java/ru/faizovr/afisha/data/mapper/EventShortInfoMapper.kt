@@ -11,7 +11,6 @@ class EventShortInfoMapper(
         EventShortInfo(
             id = entity.id ?: -1,
             title = entity.title ?: "",
-            slug = entity.slug ?: "",
             description = entity.description ?: "",
             dates = datesMapper.mapFromEntity(entity.dates),
             images = mapImage(entity.images)
