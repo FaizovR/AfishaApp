@@ -1,4 +1,4 @@
-package ru.faizovr.afisha.data.datasource
+package ru.faizovr.afisha.presentation.datasource
 
 import android.util.Log
 import androidx.paging.PagingSource
@@ -14,7 +14,7 @@ class EventListDataSource(
     PagingSource<String, EventShortInfo>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, EventShortInfo> {
-        val currentLoadingPageKey = params.key ?: "1"
+        val currentLoadingPageKey = params.key ?: FIRST_PAGE
         val result: Result<EventListInfo>
         result = repository.getEventList(currentLoadingPageKey, categoryTag)
         return when (result) {
@@ -27,9 +27,15 @@ class EventListDataSource(
                 )
             }
             else -> {
-                Log.e("TAG", "loadCategoryList: ${(result as Result.Error).exception}")
+                Log.e(TAG,
+                    "loadCategoryList: ${(result as Result.Error).exception} ${result.exception.stackTrace.map { '\n' + it.toString() }}")
                 LoadResult.Error(result.exception)
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "EventListDataSource"
+        private const val FIRST_PAGE = "1"
     }
 }

@@ -1,6 +1,6 @@
 package ru.faizovr.afisha.presentation.mapper
 
-import ru.faizovr.afisha.data.Date
+import ru.faizovr.afisha.data.TimeProvider
 import ru.faizovr.afisha.data.mapper.EntityMapper
 import ru.faizovr.afisha.domain.model.Dates
 import ru.faizovr.afisha.domain.model.EventDetailInfo
@@ -14,12 +14,12 @@ class EventDetailInfoDataViewMapper : EntityMapper<EventDetailInfo, EventDetailI
             tittle = entity.title,
             description = entity.fullDescription,
             dateString = mapDateToString(entity.dates),
-            imageUrl = entity.images.first().image,
+            imageUrl = entity.images.first(),
             place = "Цветной Бульвар"
         )
 
     private fun mapDateToString(dates: List<Dates>): String {
-        val currentTime = Date().getCurrentDate()
+        val currentTime = TimeProvider().getCurrentDate()
         val date = dates.find { it.start >= currentTime }?.start ?: return ""
         val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.forLanguageTag("ru"))
         return simpleDateFormat.format(date)

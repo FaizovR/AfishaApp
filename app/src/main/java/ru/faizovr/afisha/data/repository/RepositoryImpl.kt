@@ -1,6 +1,6 @@
 package ru.faizovr.afisha.data.repository
 
-import ru.faizovr.afisha.data.Date
+import ru.faizovr.afisha.data.TimeProvider
 import ru.faizovr.afisha.data.mapper.CategoryMapper
 import ru.faizovr.afisha.data.mapper.EventDetailMapper
 import ru.faizovr.afisha.data.mapper.EventListMapper
@@ -17,7 +17,7 @@ class RepositoryImpl(
     private val apiService: ApiService,
     private val categoryMapper: CategoryMapper = CategoryMapper(),
     private val eventListMapper: EventListMapper = EventListMapper(),
-    private val eventDetailMapper: EventDetailMapper = EventDetailMapper()
+    private val eventDetailMapper: EventDetailMapper = EventDetailMapper(),
 ) : Repository, BaseRepository() {
 
     override suspend fun getCategoriesList(): Result<List<Category>> {
@@ -40,7 +40,7 @@ class RepositoryImpl(
                         PAGE_SIZE,
                         page,
                         ORDER_TYPE,
-                        Date().currentTimeInMilliseconds(),
+                        TimeProvider().currentTimeInSeconds(),
                         LOCATION
                     )
                 }, "Error"

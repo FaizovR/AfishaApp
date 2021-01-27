@@ -11,7 +11,7 @@ data class EventDetailInfo(
     val shortDescription: String,
     val isCommentsDisabled: Boolean,
     val favoritesCount: Int,
-    val images: List<Images>,
+    val images: List<String>,
     val isFree: Boolean,
     val price: String,
     val publicationDate: Int,
@@ -19,5 +19,5 @@ data class EventDetailInfo(
     val siteUrl: String,
     val slug: String,
     val tagLine: String,
-    val tags: List<String>
+    val tags: List<String>,
 )

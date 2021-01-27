@@ -1,6 +1,6 @@
 package ru.faizovr.afisha.data.model
 
-data class EventDetailInfoResponse(
+class EventDetailInfoResponse(
     val age_restriction: String?,
     val body_text: String?,
     val categories: List<String>?,
@@ -19,5 +19,5 @@ data class EventDetailInfoResponse(
     val slug: String?,
     val tagLine: String?,
     val tags: List<String>?,
-    val title: String?
+    val title: String?,
 )

@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.faizovr.afisha.data.datasource.EventListDataSource
+import kotlinx.coroutines.withContext
 import ru.faizovr.afisha.data.repository.Repository
 import ru.faizovr.afisha.presentation.base.BaseViewModel
 import ru.faizovr.afisha.presentation.commands.EventListCommands
+import ru.faizovr.afisha.presentation.datasource.EventListDataSource
 import ru.faizovr.afisha.presentation.mapper.EventListDataViewMapper
 import ru.faizovr.afisha.presentation.model.EventListDataView
 
@@ -19,16 +21,16 @@ class EventListViewModel(
     private val eventListDataViewMapper: EventListDataViewMapper = EventListDataViewMapper(),
 ) : BaseViewModel<EventListCommands>() {
 
-    var listData: Flow<PagingData<EventListDataView>>
-
-    private val flow = Pager(
+    var listData: Flow<PagingData<EventListDataView>> = Pager(
         PagingConfig(pageSize = 20)
     ) {
         EventListDataSource(repository, categoryTag)
     }.flow
         .map { pagingData ->
-            pagingData.map {
-                eventListDataViewMapper.mapFromEntity(it)
+            withContext(Dispatchers.Default) {
+                pagingData.map {
+                    eventListDataViewMapper.mapFromEntity(it)
+                }
             }
         }
         .cachedIn(viewModelScope)
@@ -38,7 +40,6 @@ class EventListViewModel(
 
     init {
         setLoadingState()
-        listData = flow
     }
 
     fun onEventListItemClicked(eventListDataView: EventListDataView) {

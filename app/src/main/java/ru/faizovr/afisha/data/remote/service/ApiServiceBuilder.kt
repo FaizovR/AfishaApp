@@ -13,9 +13,9 @@ class ApiServiceBuilder(url: String) {
 
     private val client: OkHttpClient = OkHttpClient.Builder().apply {
         this.addInterceptor(interceptor)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+            .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
     }.build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
@@ -26,4 +26,8 @@ class ApiServiceBuilder(url: String) {
 
     fun buildService(): ApiService =
         retrofit.create(ApiService::class.java)
+
+    companion object {
+        private const val TIMEOUT: Long = 30
+    }
 }

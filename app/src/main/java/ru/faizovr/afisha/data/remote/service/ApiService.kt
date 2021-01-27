@@ -25,9 +25,10 @@ interface ApiService {
         @Query("text_format") text_format: String = "text"
     ): Response<EventListInfoResponse>
 
-    @GET("events/{id}/?text_format=text")
+    @GET("events/{id}/")
     suspend fun getEventInfo(
         @Path("id") id: Long,
-        @Query("expand") fieldsToExpand: String
+        @Query("expand") fieldsToExpand: String,
+        @Query("text_format") text_format: String = "text",
     ): Response<EventDetailInfoResponse>
 }

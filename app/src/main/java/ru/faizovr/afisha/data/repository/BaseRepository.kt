@@ -8,7 +8,7 @@ import ru.faizovr.afisha.data.wrapper.Result
 open class BaseRepository {
     suspend fun <T : Any> safeApiCall(
         apiCall: suspend () -> Response<T>,
-        errorMessage: String
+        errorMessage: String,
     ): Result<T> {
         val response: Response<T>
         try {

@@ -10,11 +10,12 @@ class EventListMapper : EntityMapper<EventListInfoResponse, EventListInfo> {
     override fun mapFromEntity(entity: EventListInfoResponse): EventListInfo {
         val next = entity.next?.substringAfterLast("page=")?.substringBefore("&")
         val previous = entity.previous?.substringAfterLast("page=")?.substringBefore("&")
+        val events = entity.results?.map(eventShortInfoMapper::mapFromEntity) ?: listOf()
         return EventListInfo(
             count = entity.count,
             nextPage = next,
             previousPage = previous,
-            events = entity.results?.map { eventShortInfoMapper.mapFromEntity(it) } ?: listOf()
+            events = events
         )
     }
 }

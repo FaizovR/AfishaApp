@@ -6,5 +6,5 @@ class EventShortInfo(
     val slug: String,
     val description: String,
     val dates: List<Dates>,
-    val images: List<Images>,
+    val images: List<String>,
 )
