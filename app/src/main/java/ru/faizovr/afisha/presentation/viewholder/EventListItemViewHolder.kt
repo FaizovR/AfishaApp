@@ -1,6 +1,5 @@
 package ru.faizovr.afisha.presentation.viewholder
 
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -8,10 +7,9 @@ import ru.faizovr.afisha.R
 import ru.faizovr.afisha.databinding.EventListItemViewHolderBinding
 import ru.faizovr.afisha.presentation.model.EventListDataView
 
-class EventListItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val binding: EventListItemViewHolderBinding =
-        EventListItemViewHolderBinding.bind(itemView)
+class EventListItemViewHolder(
+    private val binding: EventListItemViewHolderBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
     private fun setEventImage(url: String) {
         Glide.with(itemView)
@@ -20,6 +18,7 @@ class EventListItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             .into(binding.imageViewEventHolder)
     }
 
+    // TODO: 02.03.2021 вынести логику
     private fun setEventDate(dateString: String) {
         binding.textViewDateEvent.text = dateString
         binding.textViewDateEvent.isVisible = dateString.isNotEmpty()

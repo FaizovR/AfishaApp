@@ -1,51 +1,15 @@
 package ru.faizovr.afisha.presentation.activity
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import ru.faizovr.afisha.R
-import ru.faizovr.afisha.presentation.fragment.CategoryListFragment
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_layout)
-
-        if (savedInstanceState == null) {
-            addFragment(CategoryListFragment.newInstance())
-        }
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                if (supportFragmentManager.backStackEntryCount == 0) {
-                    addFragment(CategoryListFragment.newInstance())
-                } else {
-                    supportFragmentManager.popBackStack()
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(fragment.tag)
-            .commit()
-    }
-
-    private fun addFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, fragment)
-            .addToBackStack(fragment.tag)
-            .commit()
-    }
-
 }

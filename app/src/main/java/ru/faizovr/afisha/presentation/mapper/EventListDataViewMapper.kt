@@ -1,15 +1,17 @@
 package ru.faizovr.afisha.presentation.mapper
 
+import ru.faizovr.afisha.core.domain.models.DateInterval
+import ru.faizovr.afisha.core.presentation.mapper.DateMapper
 import ru.faizovr.afisha.data.TimeProvider
-import ru.faizovr.afisha.data.mapper.EntityMapper
-import ru.faizovr.afisha.domain.model.Dates
-import ru.faizovr.afisha.domain.model.EventShortInfo
+import ru.faizovr.afisha.domain.model.EventShort
 import ru.faizovr.afisha.presentation.model.EventListDataView
-import java.text.SimpleDateFormat
-import java.util.*
 
-class EventListDataViewMapper : EntityMapper<EventShortInfo, EventListDataView> {
-    override fun mapFromEntity(entity: EventShortInfo): EventListDataView =
+// TODO: 02.03.2021 вынести в di mappers
+class EventListDataViewMapper(
+    private val dateMapper: DateMapper
+) {
+
+    fun mapFromEntity(entity: EventShort): EventListDataView =
         EventListDataView(
             id = entity.id,
             title = entity.title,
@@ -18,10 +20,10 @@ class EventListDataViewMapper : EntityMapper<EventShortInfo, EventListDataView> 
             imageUrl = entity.images.first()
         )
 
-    private fun mapDate(dates: List<Dates>): String {
+    // TODO: 02.03.2021 переписать метод и вынести в model слой + кописаст EventMapper
+    private fun mapDate(dates: List<DateInterval>): String {
         val currentTime = TimeProvider().getCurrentDate()
-        val date = dates.find { it.start >= currentTime }?.start ?: return ""
-        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.forLanguageTag("ru"))
-        return simpleDateFormat.format(date)
+        val date = dates.find { it.dateFrom >= currentTime }?.dateFrom
+        return dateMapper.mapDate(date)
     }
 }

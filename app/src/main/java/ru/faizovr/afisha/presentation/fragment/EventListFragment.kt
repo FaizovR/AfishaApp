@@ -1,46 +1,31 @@
 package ru.faizovr.afisha.presentation.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import by.kirich1409.viewbindingdelegate.viewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import ru.faizovr.afisha.App
 import ru.faizovr.afisha.R
+import ru.faizovr.afisha.core.presentation.fragment.RefreshableFragment
 import ru.faizovr.afisha.databinding.FragmentEventListBinding
-import ru.faizovr.afisha.presentation.activity.MainActivity
 import ru.faizovr.afisha.presentation.adapter.EventListAdapter
 import ru.faizovr.afisha.presentation.adapter.FooterAdapter
 import ru.faizovr.afisha.presentation.commands.EventListCommands
 import ru.faizovr.afisha.presentation.model.EventListDataView
+import ru.faizovr.afisha.presentation.model.EventListScreenState
 import ru.faizovr.afisha.presentation.viewmodel.EventListViewModel
-import ru.faizovr.afisha.presentation.viewmodel.EventListViewModelFactory
 
-class EventListFragment : Fragment(R.layout.fragment_event_list) {
-
-    private var onEventClicked: (eventListDataView: EventListDataView) -> Unit =
-        { eventListDataView ->
-            viewModel.onEventListItemClicked(eventListDataView)
-        }
-
-    private val categoryTag: String by lazy {
-        requireArguments().getString(
-            EVENT_LIST_CATEGORY_TAG_KEY,
-            ""
-        )
-    }
-
-    private val viewModel: EventListViewModel by viewModels {
-        val repository = (requireActivity().application as App).repository
-        EventListViewModelFactory(repository, categoryTag)
-    }
+@AndroidEntryPoint
+class EventListFragment :
+    RefreshableFragment<EventListScreenState, EventListCommands, EventListViewModel>(
+        R.layout.fragment_event_list,
+        EventListViewModel::class.java
+    ) {
 
     private val binding by viewBinding(FragmentEventListBinding::bind)
     private var eventListAdapter: EventListAdapter? = null
@@ -53,10 +38,14 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
-        setupView()
+        val arguments = EventListFragmentArgs.fromBundle(requireArguments())
+        setupToolbar(arguments.title)
+        viewModel.init(arguments.tag)
+//        setupView()
         setupList()
         setupObservers()
+
+
     }
 
     override fun onDestroyView() {
@@ -64,32 +53,13 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
         eventListAdapter?.removeLoadStateListener(loadStateListener)
     }
 
-    private fun executeCommand(command: EventListCommands) {
+    override fun executeCommand(command: EventListCommands) =
         when (command) {
-            is EventListCommands.OpenEventDetail -> {
-                showNewFragment(command.eventListDataView)
-            }
+            is EventListCommands.OpenEventDetail -> openEventDetail(command.eventListDataView)
         }
-    }
 
+    // TODO: 03.03.2021 исправить
     private fun setupObservers() {
-        viewModel.commandsEvent.observe(viewLifecycleOwner, this::executeCommand)
-        viewModel.buttonRetryVisibility.observe(
-            viewLifecycleOwner,
-            this@EventListFragment::setRetryButtonVisibility
-        )
-        viewModel.eventListVisibility.observe(
-            viewLifecycleOwner,
-            this@EventListFragment::setEventListVisibility
-        )
-        viewModel.errorTextVisibility.observe(
-            viewLifecycleOwner,
-            this@EventListFragment::setErrorTextVisibility
-        )
-        viewModel.progressBarVisibility.observe(
-            viewLifecycleOwner,
-            this@EventListFragment::setProgressBarVisibility
-        )
         lifecycleScope.launch {
             val eventListAdapter1 = eventListAdapter
             if (eventListAdapter1 != null) {
@@ -98,22 +68,22 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
         }
     }
 
-    private fun setupToolbar() {
-        val title: String = arguments?.getString(EVENT_LIST_CATEGORY_TITLE_KEY) ?: ""
+    private fun setupToolbar(title: String) {
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             this.title = title
         }
     }
 
-    private fun setupView() {
-        binding.buttonEventListRetry.setOnClickListener {
-            eventListAdapter?.retry()
-        }
-    }
+    // TODO: 03.03.2021 error handling
+//    private fun setupView() {
+//        binding.buttonEventListRetry.setOnClickListener {
+//            eventListAdapter?.retry()
+//        }
+//    }
 
     private fun setupList() {
-        eventListAdapter = EventListAdapter(onEventClicked)
+        eventListAdapter = EventListAdapter(viewModel::onEventListItemClicked)
         with(binding) {
             recyclerViewEventList.apply {
                 setHasFixedSize(true)
@@ -125,39 +95,13 @@ class EventListFragment : Fragment(R.layout.fragment_event_list) {
         eventListAdapter?.addLoadStateListener(loadStateListener)
     }
 
-    private fun setRetryButtonVisibility(isVisible: Boolean) {
-        binding.buttonEventListRetry.isVisible = isVisible
-    }
-
-    private fun setErrorTextVisibility(isVisible: Boolean) {
-        binding.textViewEventListFailedMessage.isVisible = isVisible
-    }
-
-    private fun setProgressBarVisibility(isVisible: Boolean) {
-        binding.progressBarEventList.isVisible = isVisible
-    }
-
     private fun setEventListVisibility(isVisible: Boolean) {
         binding.recyclerViewEventList.isVisible = isVisible
     }
 
-    private fun showNewFragment(eventListDataView: EventListDataView) {
-        val fragment: Fragment =
-            EventDetailFragment.newInstance(eventListDataView.id, eventListDataView.title)
-        (requireActivity() as MainActivity).replaceFragment(fragment)
+    private fun openEventDetail(eventListDataView: EventListDataView) {
+        val args = EventDetailFragmentArgs(eventListDataView.id, eventListDataView.title).toBundle()
+        navController.navigate(R.id.navigation_event_detail, args)
     }
 
-    companion object {
-        private const val EVENT_LIST_CATEGORY_TAG_KEY = "Event_List_Category_tag"
-        private const val EVENT_LIST_CATEGORY_TITLE_KEY = "Event_List_Category_Title"
-        fun newInstance(categoryTag: String, categoryTitle: String): EventListFragment {
-            val args = Bundle()
-            args.putString(EVENT_LIST_CATEGORY_TAG_KEY, categoryTag)
-            args.putString(EVENT_LIST_CATEGORY_TITLE_KEY, categoryTitle)
-            Log.d("TAG", "newInstance: $categoryTag $categoryTitle ")
-            val fragment = EventListFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
 }

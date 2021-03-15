@@ -1,84 +1,49 @@
 package ru.faizovr.afisha.presentation.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import ru.faizovr.afisha.data.repository.Repository
-import ru.faizovr.afisha.data.wrapper.Result
-import ru.faizovr.afisha.domain.model.EventDetailInfo
-import ru.faizovr.afisha.presentation.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import ru.faizovr.afisha.core.domain.models.Lce
+import ru.faizovr.afisha.core.presentation.viewModel.ScreenDataFetchingViewModel
+import ru.faizovr.afisha.domain.interactors.EventsInteractor
 import ru.faizovr.afisha.presentation.commands.EventDetailCommands
-import ru.faizovr.afisha.presentation.mapper.EventDetailInfoDataViewMapper
-import ru.faizovr.afisha.presentation.model.EventDetailInfoDataView
+import ru.faizovr.afisha.presentation.mapper.EventMapper
+import ru.faizovr.afisha.presentation.model.EventDetailDataView
+import ru.faizovr.afisha.presentation.model.EventDetailScreenState
+import javax.inject.Inject
 
-class EventDetailViewModel(
-    private val repository: Repository,
-    private val eventId: Long,
-    private val eventDetailInfoDataViewMapper: EventDetailInfoDataViewMapper = EventDetailInfoDataViewMapper(),
-) : BaseViewModel<EventDetailCommands>() {
+@HiltViewModel
+class EventDetailViewModel @Inject constructor(
+    private val eventsInteractor: EventsInteractor,
+    private val eventMapper: EventMapper,
+) : ScreenDataFetchingViewModel<EventDetailDataView, EventDetailScreenState, EventDetailCommands>(
+    EventDetailScreenState()
+) {
 
-    private val _eventDetailInfo = MutableLiveData<EventDetailInfoDataView>()
-    val eventDetailInfoView: LiveData<EventDetailInfoDataView> = _eventDetailInfo
-
-    private val _eventDetailInfoVisibility = MutableLiveData<Boolean>()
-    val eventDetailVisibility: LiveData<Boolean> = _eventDetailInfoVisibility
-
-    init {
-        fetchInfo()
+    fun init(eventId: Long) {
+        updateScreenState(eventId = eventId)
+        fetchScreenData()
     }
 
-    private fun fetchInfo() {
-        setLoadingState()
-        viewModelScope.launch {
-            val result = repository.getEventDetail(eventId)
-            withContext(Dispatchers.Main) {
-                prepareResult(result)
+    private fun updateScreenState(
+        lce: Lce<EventDetailDataView>? = model.lce,
+        eventId: Long? = model.eventId,
+        shouldRefreshView: Boolean = true
+    ) {
+        model = EventDetailScreenState(lce, eventId)
+        if (shouldRefreshView)
+            refreshView()
+    }
+
+    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Flow<Lce<EventDetailDataView>>? =
+        model.eventId?.let { eventId ->
+            eventsInteractor.getEventById(eventId).map { lce ->
+                lce.toLceWithTransformedContent(eventMapper::map)
             }
         }
-    }
 
-    private fun prepareResult(result: Result<EventDetailInfo>) {
-        when (result) {
-            is Result.Success -> {
-                refreshEventDetailData(result.value)
-                setDefaultState()
-            }
-            is Result.Error -> {
-                setErrorState()
-                Log.e(
-                    "TAG",
-                    "fetchInfo: ${result.exception.localizedMessage} ${
-                        result.exception.stackTrace
-                    }"
-                )
-            }
-        }
-    }
-
-    private fun refreshEventDetailData(eventDetailInfo: EventDetailInfo) {
-        _eventDetailInfo.value = eventDetailInfoDataViewMapper.mapFromEntity(eventDetailInfo)
-    }
-
-    fun onRetryClicked() {
-        fetchInfo()
-    }
-
-    override fun setDefaultState() {
-        super.setDefaultState()
-        _eventDetailInfoVisibility.value = true
-    }
-
-    override fun setErrorState() {
-        super.setErrorState()
-        _eventDetailInfoVisibility.value = false
-    }
-
-    override fun setLoadingState() {
-        super.setLoadingState()
-        _eventDetailInfoVisibility.value = false
+    override fun getUpdatedModelForLce(lce: Lce<EventDetailDataView>?): EventDetailScreenState {
+        updateScreenState(lce = lce)
+        return model
     }
 }

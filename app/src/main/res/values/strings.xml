@@ -4,4 +4,7 @@
     <string name="error_with_internet_connections">Error with Internet Connections</string>
     <string name="action_retry">Retry</string>
     <string name="date_example">31.12.2020 – 01.01.2021</string>
+    <string name="label_event_list_fragment">Event List Fragment</string>
+    <string name="label_category_list_fragment">Category List Fragment</string>
+    <string name="label_event_detail_fragment">Event Detail Fragment</string>
 </resources>

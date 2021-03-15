@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_app"
+    app:startDestination="@id/navigation_category_list">
+
+    <fragment
+        android:id="@+id/navigation_category_list"
+        android:name="ru.faizovr.afisha.presentation.fragment.CategoryListFragment"
+        android:label="@string/label_category_list_fragment"
+        tools:layout="@layout/fragment_category_list" />
+
+    <fragment
+        android:id="@+id/navigation_event_detail"
+        android:name="ru.faizovr.afisha.presentation.fragment.EventDetailFragment"
+        android:label="@string/label_event_detail_fragment"
+        tools:layout="@layout/fragment_event_detail">
+        <argument
+            android:name="eventId"
+            app:argType="long" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_event_list"
+        android:name="ru.faizovr.afisha.presentation.fragment.EventListFragment"
+        android:label="@string/label_event_list_fragment"
+        tools:layout="@layout/fragment_event_list">
+        <argument
+            android:name="tag"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
+</navigation>

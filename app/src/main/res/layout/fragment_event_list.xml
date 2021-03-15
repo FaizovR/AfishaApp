@@ -6,42 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.EventListFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_event_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/layout_pull_to_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/backgroundColor"
-        android:scrollbars="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="3"
-        tools:listitem="@layout/event_list_item_view_holder" />
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress_bar_event_list"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_event_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundColor"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="3"
+            tools:listitem="@layout/event_list_item_view_holder" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:id="@+id/text_view_event_list_failed_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/error_with_internet_connections"
-        android:visibility="gone"
-        tools:layout_marginTop="@dimen/spacing_huge_32"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/button_event_list_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/spacing_huge_32"
-        android:text="@string/action_retry"
-        android:visibility="gone"
-        tools:visibility="visible" />
+    <include layout="@layout/layout_error_loading_data" />
 
 </FrameLayout>

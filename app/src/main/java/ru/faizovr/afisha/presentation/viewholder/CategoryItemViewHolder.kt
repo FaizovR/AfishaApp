@@ -1,26 +1,19 @@
 package ru.faizovr.afisha.presentation.viewholder
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.faizovr.afisha.databinding.CategoryListItemViewHolderBinding
 import ru.faizovr.afisha.presentation.model.CategoryDataView
 
-class CategoryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val binding: CategoryListItemViewHolderBinding by viewBinding(
-        CategoryListItemViewHolderBinding::bind
-    )
+class CategoryItemViewHolder(
+    private val binding: CategoryListItemViewHolderBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         categoryDataView: CategoryDataView,
         onMenuClicked: (categoryDataView: CategoryDataView) -> Unit
-    ) {
+    ) =
         with(binding) {
             textMenuItemTitle.text = categoryDataView.name
-            root.setOnClickListener {
-                onMenuClicked(categoryDataView)
-            }
+            root.setOnClickListener { onMenuClicked(categoryDataView) }
         }
-    }
 }

@@ -1,11 +1,9 @@
 package ru.faizovr.afisha.presentation.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import ru.faizovr.afisha.R
-import ru.faizovr.afisha.presentation.diffutil.EventListDiffUtil
+import ru.faizovr.afisha.databinding.EventListItemViewHolderBinding
 import ru.faizovr.afisha.presentation.model.EventListDataView
 import ru.faizovr.afisha.presentation.viewholder.EventListItemViewHolder
 
@@ -13,9 +11,9 @@ class EventListAdapter(private val onEventClickListener: (eventListDataView: Eve
     PagingDataAdapter<EventListDataView, EventListItemViewHolder>(EventListDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventListItemViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.event_list_item_view_holder, parent, false)
-        return EventListItemViewHolder(view)
+        val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
+        val binding = EventListItemViewHolderBinding.inflate(layoutInflater, parent, false)
+        return EventListItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: EventListItemViewHolder, position: Int) {

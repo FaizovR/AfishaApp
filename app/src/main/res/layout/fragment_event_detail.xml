@@ -6,94 +6,75 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.EventDetailFragment">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/layout_pull_to_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
 
-            <ImageView
-                android:id="@+id/image_view_detail"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:padding="@dimen/spacing_small_8"
-                tools:ignore="ContentDescription"
-                tools:src="@drawable/image_place_holder" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_view_place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_normal_16"
-                android:layout_marginTop="@dimen/spacing_normal_16"
-                android:drawablePadding="@dimen/spacing_small_8"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:drawableStartCompat="@drawable/ic_baseline_place_24"
-                tools:text="Цветной бульвар" />
+                <ImageView
+                    android:id="@+id/image_view_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:padding="@dimen/spacing_small_8"
+                    tools:ignore="ContentDescription"
+                    tools:src="@drawable/image_place_holder" />
 
-            <TextView
-                android:id="@+id/text_view_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_normal_16"
-                android:layout_marginTop="@dimen/spacing_small_8"
-                android:drawablePadding="@dimen/spacing_small_8"
-                android:textAppearance="?attr/textAppearanceBody1"
-                app:drawableStartCompat="@drawable/ic_round_date_24"
-                tools:text="21 Сентября 2019 - 2 Февраля 2023" />
+                <TextView
+                    android:id="@+id/text_view_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/spacing_normal_16"
+                    android:layout_marginTop="@dimen/spacing_normal_16"
+                    android:drawablePadding="@dimen/spacing_small_8"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:drawableStartCompat="@drawable/ic_baseline_place_24"
+                    tools:text="Цветной бульвар" />
 
-            <TextView
-                android:id="@+id/text_view_tittle_event"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_normal_16"
-                android:layout_marginTop="@dimen/spacing_normal_16"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                tools:text="Заголовок" />
+                <TextView
+                    android:id="@+id/text_view_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/spacing_normal_16"
+                    android:layout_marginTop="@dimen/spacing_small_8"
+                    android:drawablePadding="@dimen/spacing_small_8"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    app:drawableStartCompat="@drawable/ic_round_date_24"
+                    tools:text="21 Сентября 2019 - 2 Февраля 2023" />
 
-            <TextView
-                android:id="@+id/text_view_description"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/spacing_normal_16"
-                android:layout_marginTop="@dimen/spacing_small_8"
-                android:paddingBottom="@dimen/spacing_normal_16"
-                android:textAppearance="?attr/textAppearanceBody2"
-                tools:text="Описание" />
+                <TextView
+                    android:id="@+id/text_view_tittle_event"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/spacing_normal_16"
+                    android:layout_marginTop="@dimen/spacing_normal_16"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    tools:text="Заголовок" />
 
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/text_view_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="@dimen/spacing_normal_16"
+                    android:layout_marginTop="@dimen/spacing_small_8"
+                    android:paddingBottom="@dimen/spacing_normal_16"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    tools:text="Описание" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_event_detail"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:id="@+id/text_view_event_detail_failed_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/error_with_internet_connections"
-        android:visibility="gone"
-        tools:layout_marginTop="@dimen/spacing_huge_32"
-        tools:visibility="visible" />
+    <include layout="@layout/layout_error_loading_data" />
 
-    <Button
-        android:id="@+id/button_event_detail_retry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/spacing_huge_32"
-        android:text="@string/action_retry"
-        android:visibility="gone"
-        tools:visibility="visible" />
 </FrameLayout>
