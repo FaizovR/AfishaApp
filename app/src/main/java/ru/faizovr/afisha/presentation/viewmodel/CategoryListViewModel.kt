@@ -45,4 +45,7 @@ class CategoryListViewModel @Inject constructor(
 
     fun onCategoriesListItemClicked(categoryDataView: CategoryDataView) =
         executeCommand(CategoriesCommands.OpenEventList(categoryDataView))
+
+    fun onNavigationBackClicked() =
+        executeCommand(CategoriesCommands.NavigateToPreviousScreen)
 }

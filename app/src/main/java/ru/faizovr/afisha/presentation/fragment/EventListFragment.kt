@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.CombinedLoadStates
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,13 +40,19 @@ class EventListFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val arguments = EventListFragmentArgs.fromBundle(requireArguments())
-        setupToolbar(arguments.title)
         viewModel.init(arguments.tag)
 //        setupView()
+        setupAppBar(binding.abEventList.actionBar)
+        setupToolbar(arguments.title)
         setupList()
         setupObservers()
+    }
 
-
+    private fun setupAppBar(toolBar: MaterialToolbar) {
+        setHasOptionsMenu(true)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolBar)
+        toolBar.setNavigationOnClickListener { viewModel.onNavigationBackClicked() }
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onDestroyView() {
@@ -56,6 +63,7 @@ class EventListFragment :
     override fun executeCommand(command: EventListCommands) =
         when (command) {
             is EventListCommands.OpenEventDetail -> openEventDetail(command.eventListDataView)
+            is EventListCommands.NavigateToPreviousScreen -> navigateToPreviousScreen()
         }
 
     // TODO: 03.03.2021 исправить

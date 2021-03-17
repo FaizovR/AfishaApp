@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
-import ru.faizovr.afisha.databinding.EventListFooterViewHolderBinding
+import ru.faizovr.afisha.databinding.ViewHolderEventListFooterBinding
 import ru.faizovr.afisha.presentation.viewholder.EventListFooterViewHolder
 
 class FooterAdapter(
@@ -16,7 +16,7 @@ class FooterAdapter(
         loadState: LoadState,
     ): EventListFooterViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
-        val binding = EventListFooterViewHolderBinding.inflate(layoutInflater, parent, false)
+        val binding = ViewHolderEventListFooterBinding.inflate(layoutInflater, parent, false)
         return EventListFooterViewHolder(binding)
     }
 

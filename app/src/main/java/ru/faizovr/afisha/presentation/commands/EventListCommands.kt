@@ -5,4 +5,5 @@ import ru.faizovr.afisha.presentation.model.EventListDataView
 
 sealed class EventListCommands : Command {
     class OpenEventDetail(val eventListDataView: EventListDataView) : EventListCommands()
+    object NavigateToPreviousScreen : EventListCommands()
 }

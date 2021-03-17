@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.EventDetailFragment">
 
+    <include
+        android:id="@+id/ab_event_detail"
+        layout="@layout/layout_action_bar" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/layout_pull_to_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize">
 
         <ScrollView
             android:layout_width="match_parent"

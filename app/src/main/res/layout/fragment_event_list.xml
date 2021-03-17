@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.EventListFragment">
 
+    <include
+        android:id="@+id/ab_event_list"
+        layout="@layout/layout_action_bar" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/layout_pull_to_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_event_list"
@@ -19,7 +24,7 @@
             android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="3"
-            tools:listitem="@layout/event_list_item_view_holder" />
+            tools:listitem="@layout/view_holder_event_list_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include layout="@layout/layout_error_loading_data" />

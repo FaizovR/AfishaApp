@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.faizovr.afisha.R
 import ru.faizovr.afisha.core.presentation.fragment.RefreshableFragment
@@ -28,7 +29,15 @@ class CategoryListFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+        setupAppBar(binding.abCategoryList.actionBar)
         setupView()
+    }
+
+    private fun setupAppBar(toolBar: MaterialToolbar) {
+        setHasOptionsMenu(true)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolBar)
+        toolBar.setNavigationOnClickListener { viewModel.onNavigationBackClicked() }
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun setupToolbar() {
@@ -52,6 +61,7 @@ class CategoryListFragment :
     override fun executeCommand(command: CategoriesCommands) =
         when (command) {
             is CategoriesCommands.OpenEventList -> openEventList(command.categoryDataView)
+            is CategoriesCommands.NavigateToPreviousScreen -> navigateToPreviousScreen()
         }
 
     private fun openEventList(categoryDataView: CategoryDataView) {

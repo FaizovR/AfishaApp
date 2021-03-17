@@ -46,4 +46,7 @@ class EventDetailViewModel @Inject constructor(
         updateScreenState(lce = lce)
         return model
     }
+
+    fun onNavigationBackClicked() =
+        executeCommand(EventDetailCommands.NavigateToPreviousScreen)
 }

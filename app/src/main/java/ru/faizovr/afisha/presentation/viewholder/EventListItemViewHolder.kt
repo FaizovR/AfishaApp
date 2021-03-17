@@ -4,11 +4,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.faizovr.afisha.R
-import ru.faizovr.afisha.databinding.EventListItemViewHolderBinding
+import ru.faizovr.afisha.databinding.ViewHolderEventListItemBinding
 import ru.faizovr.afisha.presentation.model.EventListDataView
 
 class EventListItemViewHolder(
-    private val binding: EventListItemViewHolderBinding
+    private val binding: ViewHolderEventListItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private fun setEventImage(url: String) {

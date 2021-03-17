@@ -5,4 +5,5 @@ import ru.faizovr.afisha.presentation.model.CategoryDataView
 
 sealed class CategoriesCommands : Command {
     class OpenEventList(val categoryDataView: CategoryDataView) : CategoriesCommands()
+    object NavigateToPreviousScreen : CategoriesCommands()
 }

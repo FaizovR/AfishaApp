@@ -79,4 +79,7 @@ class EventListViewModel @Inject constructor(
     override fun getUpdatedModelForLce(lce: Lce<Nothing>?): EventListScreenState {
         return model
     }
+
+    fun onNavigationBackClicked() =
+        executeCommand(EventListCommands.NavigateToPreviousScreen)
 }
