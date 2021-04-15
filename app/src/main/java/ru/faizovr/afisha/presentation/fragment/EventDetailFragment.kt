@@ -74,12 +74,15 @@ class EventDetailFragment :
         }
     }
 
-    private fun setEventVisible(isVisible: Boolean) =
-        with(binding) {
-            imageViewDetail.fadeTo(isVisible)
-            textViewDate.fadeTo(isVisible)
-            textViewDescription.fadeTo(isVisible)
-            textViewPlace.fadeTo(isVisible)
-            textViewTittleEvent.fadeTo(isVisible)
+    private fun setEventVisible(isVisible: Boolean) {
+        if (isVisible != null) {
+            with(binding) {
+                imageViewDetail.fadeTo(isVisible)
+                textViewDate.fadeTo(isVisible)
+                textViewDescription.fadeTo(isVisible)
+                textViewPlace.fadeTo(isVisible)
+                textViewTittleEvent.fadeTo(isVisible)
+            }
         }
+    }
 }
