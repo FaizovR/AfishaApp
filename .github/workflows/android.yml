@@ -7,15 +7,11 @@ jobs:
 
     steps:
       - name: Clone repo
-        uses: actions/checkout@main
+        uses: actions/checkout@master
         with:
           fetch-depth: 1
       - name: ktlint
         uses: ScaCap/action-ktlint@master
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review 
-          reportet: github-pr-check
-          filter_mode: nofilter
-          fail_on_error: false
-          android: true
+          reporter: github-pr-review # Change reporter
