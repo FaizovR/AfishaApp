@@ -3,11 +3,11 @@ package ru.faizovr.afisha.presentation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.faizovr.afisha.R
+import ru.faizovr.afisha.core.presentation.extensions.fadeTo
 import ru.faizovr.afisha.core.presentation.fragment.RefreshableFragment
 import ru.faizovr.afisha.databinding.FragmentCategoryListBinding
 import ru.faizovr.afisha.presentation.adapter.CategoryAdapter
@@ -70,7 +70,7 @@ class CategoryListFragment :
     }
 
     private fun setCategoryListVisibility(isVisible: Boolean) {
-        binding.recyclerViewCategory.isVisible = isVisible
+        binding.recyclerViewCategory.fadeTo(isVisible)
     }
 
     private fun updateCategoriesList(categories: List<CategoryDataView>?) =

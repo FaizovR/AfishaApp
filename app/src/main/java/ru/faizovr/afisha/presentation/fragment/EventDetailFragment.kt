@@ -3,12 +3,12 @@ package ru.faizovr.afisha.presentation.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.faizovr.afisha.R
+import ru.faizovr.afisha.core.presentation.extensions.fadeTo
 import ru.faizovr.afisha.core.presentation.fragment.RefreshableFragment
 import ru.faizovr.afisha.databinding.FragmentEventDetailBinding
 import ru.faizovr.afisha.presentation.commands.EventDetailCommands
@@ -76,10 +76,10 @@ class EventDetailFragment :
 
     private fun setEventVisible(isVisible: Boolean) =
         with(binding) {
-            imageViewDetail.isVisible = isVisible
-            textViewDate.isVisible = isVisible
-            textViewDescription.isVisible = isVisible
-            textViewPlace.isVisible = isVisible
-            textViewTittleEvent.isVisible = isVisible
+            imageViewDetail.fadeTo(isVisible)
+            textViewDate.fadeTo(isVisible)
+            textViewDescription.fadeTo(isVisible)
+            textViewPlace.fadeTo(isVisible)
+            textViewTittleEvent.fadeTo(isVisible)
         }
 }

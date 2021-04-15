@@ -9,6 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.faizovr.afisha.core.R
+import ru.faizovr.afisha.core.presentation.extensions.toggle
 import ru.faizovr.afisha.core.presentation.models.RefreshableScreenState
 import ru.faizovr.afisha.core.presentation.navigation.Command
 import ru.faizovr.afisha.core.presentation.viewModel.ScreenDataFetchingViewModel
@@ -59,7 +60,7 @@ abstract class RefreshableFragment<
     }
 
     private fun updateLayoutPullToRefresh(isLoading: Boolean) {
-        layoutPullToRefresh?.isRefreshing = isLoading
+        layoutPullToRefresh?.toggle(isLoading)
     }
 
     private fun updateErrorState(model: ScreenState) =
