@@ -1,8 +1,6 @@
 package ru.faizovr.afisha.presentation.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import ru.faizovr.afisha.core.domain.models.Lce
 import ru.faizovr.afisha.core.presentation.viewModel.ScreenDataFetchingViewModel
 import ru.faizovr.afisha.domain.interactors.CategoriesInteractor
@@ -33,10 +31,10 @@ class CategoryListViewModel @Inject constructor(
             refreshView()
     }
 
-    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Flow<Lce<List<CategoryDataView>>> =
-        categoriesInteractor.getCategoriesList().map { lce ->
-            lce.toLceWithTransformedContent(categoryMapper::mapCategories)
-        }
+    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Lce<List<CategoryDataView>> {
+        val lce = categoriesInteractor.getCategoriesList()
+        return lce.toLceWithTransformedContent(categoryMapper::mapCategories)
+    }
 
     override fun getUpdatedModelForLce(lce: Lce<List<CategoryDataView>>?): CategoriesListScreenState {
         updateScreenState(lce = lce)

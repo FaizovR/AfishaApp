@@ -72,7 +72,7 @@ class EventListViewModel @Inject constructor(
         }
     }
 
-    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Flow<Lce<Nothing>>? {
+    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Lce<Nothing>? {
         return null
     }
 

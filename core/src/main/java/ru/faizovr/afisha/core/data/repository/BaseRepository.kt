@@ -1,22 +1,22 @@
 package ru.faizovr.afisha.core.data.repository
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import android.util.Log
 import ru.faizovr.afisha.core.domain.models.Lce
 
 open class BaseRepository {
+
+    private val logTag = this::class.java.simpleName
+
     suspend fun <T : Any> safeApiCall(
         apiCall: suspend () -> T
-    ): Flow<Lce<T>> {
-        return flow {
-            val response = apiCall.invoke()
-            emit(Lce(response))
-        }.catch {
-            emit(Lce.error(it))
-        }.flowOn(Dispatchers.IO)
+    ): Lce<T> {
+        return try {
+            val response: T = apiCall.invoke()
+            Lce.data(response)
+        } catch (t: Throwable) {
+            Log.e(logTag, "safeApiCall: ${t.stackTrace}")
+            Lce.error(t)
+        }
     }
 
     fun <T, K> mapResult(list: List<T>, mapper: (T) -> (K)) =

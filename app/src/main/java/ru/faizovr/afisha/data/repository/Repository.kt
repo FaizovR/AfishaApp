@@ -1,6 +1,5 @@
 package ru.faizovr.afisha.data.repository
 
-import kotlinx.coroutines.flow.Flow
 import ru.faizovr.afisha.core.data.repository.BaseRepository
 import ru.faizovr.afisha.core.domain.models.Lce
 import ru.faizovr.afisha.data.TimeProvider
@@ -16,7 +15,7 @@ class Repository(
     private val mapper: ApiMapper
 ) : BaseRepository() {
 
-    suspend fun getCategoriesList(): Flow<Lce<List<Category>>> =
+    suspend fun getCategoriesList(): Lce<List<Category>> =
         safeApiCall {
             val categoriesList: List<CategoryApiItem> = kudaGoApi.getCategoriesList()
             mapResult(categoriesList, mapper::mapCategoriesList)
@@ -36,7 +35,7 @@ class Repository(
         return mapResult(events, mapper::map)
     }
 
-    suspend fun getEventDetail(eventId: Long): Flow<Lce<Event>> =
+    suspend fun getEventDetail(eventId: Long): Lce<Event> =
         safeApiCall {
             val eventInfo = kudaGoApi.getEventInfo(eventId, FIELDS_TO_EXPAND)
             mapResult(eventInfo, mapper::map)

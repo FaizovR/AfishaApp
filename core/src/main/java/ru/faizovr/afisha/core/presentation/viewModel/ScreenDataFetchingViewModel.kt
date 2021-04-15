@@ -1,8 +1,6 @@
 package ru.faizovr.afisha.core.presentation.viewModel
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.faizovr.afisha.core.domain.models.Lce
 import ru.faizovr.afisha.core.presentation.models.RefreshableScreenState
@@ -23,10 +21,8 @@ abstract class ScreenDataFetchingViewModel<
     protected open fun fetchScreenData(allowCachedResult: Boolean = false) {
         viewModelScope.launch {
             refreshViewForLce(Lce.loading())
-            getFetchScreenData(allowCachedResult)
-                ?.collect {
-                    refreshViewForLce(it)
-                }
+            val lce = getFetchScreenData(allowCachedResult)
+            refreshViewForLce(lce)
         }
     }
 
@@ -35,20 +31,18 @@ abstract class ScreenDataFetchingViewModel<
         refreshView()
     }
 
-    protected abstract suspend fun getFetchScreenData(allowCachedResult: Boolean = false): Flow<Lce<ScreenDataType>>?
+    protected abstract suspend fun getFetchScreenData(allowCachedResult: Boolean = false): Lce<ScreenDataType>?
 
     protected abstract fun getUpdatedModelForLce(lce: Lce<ScreenDataType>?): ScreenState
 
     protected fun <ActionResultType> executeAction(
-        actionRequest: suspend () -> Flow<Lce<ActionResultType>>,
+        actionRequest: suspend () -> Lce<ActionResultType>,
         lceUpdateCallback: (Lce<ActionResultType>) -> Unit
     ) {
-        lceUpdateCallback(Lce.loading())
         viewModelScope.launch {
-            actionRequest()
-                .collect {
-                    lceUpdateCallback(it)
-                }
+            lceUpdateCallback(Lce.loading())
+            val lce = actionRequest()
+            lceUpdateCallback(lce)
         }
     }
 

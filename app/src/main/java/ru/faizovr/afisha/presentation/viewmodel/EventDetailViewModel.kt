@@ -1,8 +1,6 @@
 package ru.faizovr.afisha.presentation.viewmodel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import ru.faizovr.afisha.core.domain.models.Lce
 import ru.faizovr.afisha.core.presentation.viewModel.ScreenDataFetchingViewModel
 import ru.faizovr.afisha.domain.interactors.EventsInteractor
@@ -35,11 +33,10 @@ class EventDetailViewModel @Inject constructor(
             refreshView()
     }
 
-    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Flow<Lce<EventDetailDataView>>? =
+    override suspend fun getFetchScreenData(allowCachedResult: Boolean): Lce<EventDetailDataView>? =
         model.eventId?.let { eventId ->
-            eventsInteractor.getEventById(eventId).map { lce ->
-                lce.toLceWithTransformedContent(eventMapper::map)
-            }
+            val lce = eventsInteractor.getEventById(eventId)
+            return lce.toLceWithTransformedContent(eventMapper::map)
         }
 
     override fun getUpdatedModelForLce(lce: Lce<EventDetailDataView>?): EventDetailScreenState {
