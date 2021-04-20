@@ -2,7 +2,7 @@ name: Post merge
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   allChecks:
